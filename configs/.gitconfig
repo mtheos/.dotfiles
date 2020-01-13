@@ -1,0 +1,7 @@
+[core]
+	autocrlf = input
+[user]
+	name = Michael Theos
+	email = theos.michael@gmail.com
+[color]
+	ui = auto
