@@ -1,17 +1,25 @@
 #!/bin/bash
 
 # Variables
-declare -a packages=(zsh vim git)
-declare -a configs=(.zshrc .vimrc .gdbinit  .profile .fake .bashrc .gitconfig)
+declare -a packages=(git npm vim zsh)
+declare -a configs=( .bash_prompt .bashrc .gdbinit .gitconfig .npmrc .profile .term_aliases .term_bootscripts .term_manualscripts .vimrc .zshrc )
 CONFIG=~/.homedir_conf/configs
 TMP=~/.homedir_conf/tmp
 ZSH_CUSTOM=~/.oh-my-zsh/custom
 
+# Repo clone locations
+#OHMYZSH_LOC=~/.oh-my-zsh
+ZSH_AUTO_COMPLETE_LOC=$ZSH_CUSTOM/plugins/zsh-autosuggestions
+ZSH_SYNTAX_HIGHLIGHTING_LOC=$ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+VUNDLE_LOC=~/.vim/bundle/Vundle.vim
+PWNDBG_LOC=~/.local/lib/pwndbg
+
 # Repos
 #OHMYZSH=https://github.com/ohmyzsh/ohmyzsh.git
-ZSH_AUTO_COMPLETE="https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions"
-ZSH_SYNTAX_HIGHLIGHTING="https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
-VUNDLE="https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim"
+ZSH_AUTO_COMPLETE=https://github.com/zsh-users/zsh-autosuggestions.git
+ZSH_SYNTAX_HIGHLIGHTING=https://github.com/zsh-users/zsh-syntax-highlighting.git
+VUNDLE=https://github.com/VundleVim/Vundle.vim.git
+PWNDBG=https://github.com/pwndbg/pwndbg
 
 # Scripts
 OHMYZSH=https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
@@ -82,12 +90,19 @@ install_ohmyzsh() {
 }
 
 install_zsh_addons() {
-   git clone $ZSH_AUTO_COMPLETE
-   git clone $ZSH_SYNTAX_HIGHLIGHTING
+   git clone $ZSH_AUTO_COMPLETE $ZSH_AUTO_COMPLETE_LOC
+   git clone $ZSH_SYNTAX_HIGHLIGHTING $ZSH_SYNTAX_HIGHLIGHTING_LOC
 }
 
 install_vundle() {
-   git clone $VUNDLE
+   git clone $VUNDLE $VUNDLE_LOC
+}
+
+
+install_pwndbg() {
+   mkdir -p $PWNDBG_LOC
+   git clone $PWNDBG $PWNDBG_LOC
+   sh -c "$(cd $PWNDBG_LOC; ./setup.sh)"
 }
 
 main() {
@@ -113,6 +128,8 @@ main() {
    install_zsh_addons
    # Install Vundle
    install_vundle
+   # Install pwndbg
+   install_pwndbg
    # Notify if any config files don't exist
    check_configs_exist
    # Link all config files that do exist

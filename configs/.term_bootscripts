@@ -1,0 +1,5 @@
+#!/bin/bash
+# Workaround when Synaptics driver not installed
+# xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Natural Scrolling Enabled" 1
+# xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 0.5
+# xset m 50 50

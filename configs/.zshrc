@@ -52,7 +52,7 @@ ZSH_THEME_RANDOM_CANDIDATES=( "../custom/themes/muse_mod" )
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
+# HIST_STAMPS="dd/mm/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -69,18 +69,15 @@ zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
-PATH=$PATH:~/.local/bin
-alias py=python3
-alias pip=pip3.6
-alias elm=elm19
-alias venv='virtualenv --python=python3 venv'
-export PYTHONDONTWRITEBYTECODE=1
-
-elm-build () {
-   elm make --output="./public/main.js" "./src/App.elm"
-}
 
 # User configuration
+
+# Import aliases
+if [[ -f ~/.term_aliases ]]; then
+   source ~/.term_aliases
+fi
+
+PATH=$PATH:~/.local/bin
 
 # export MANPATH="/usr/local/man:$MANPATH"
 

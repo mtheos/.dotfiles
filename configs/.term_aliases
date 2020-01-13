@@ -1,0 +1,110 @@
+#!/usr/bin/bash
+# alias name='command'
+alias ea='subl ~/.term_aliases &'                                              # Open alias file
+alias sa='source ~/.term_aliases && echo "Aliases sourced  --ok."'             # Source alias file
+alias ep='subl ~/.bash_prompt &'                                               # Open promp file
+alias sp='source ~/.bash_prompt && echo "Prompt sourced  --ok."'               # Source prompt file
+alias es='subl ~/.term_autoscripts &'                                          # Open autoscripts file
+alias ss='source ~/.term_autoscripts && echo "Scripts sourced  --ok."'         # Source autoscripts file
+alias te='konsole . &'                                                         # Open a new console
+alias runscripts='~/.term_manualscripts'                                       # run .term_manualscripts
+
+alias sudo='sudo '
+alias applications='cd /usr/share/applications && ls'
+alias explore='nautilus . &'
+alias exp='nautilus . &'
+alias sudoexplore='sudo nautilus . &'
+alias sudoexp='sudo nautilus . &'
+alias LASTCMD='$( history -p !! )'
+alias please='sudo LASTCMD'
+alias fuck='sudo LASTCMD'
+alias fuckoff='sudo LASTCMD'
+alias fucking='sudo '
+alias ssubl='sudo subl'
+alias svim='sudo vim'
+alias lastmem='valgrind --tool=memcheck --leak-check=full LASTCMD'
+alias showme='apt list --upgradable'
+alias apt-upgrade='sudo apt update; sudo apt upgrade -y'
+alias py2='python'
+alias py3='python3'
+alias py='python3'
+alias pip=pip3.6
+alias elm=elm19
+alias apps='sudo nautilus /usr/bin'
+alias dapps='sudo nautilus /usr/share/applications'
+alias venv='virtualenv --python=python3 venv'
+alias stop='deactivate'
+alias deactivatePrompt='mv ~/.bash_prompt ~/.bash_prompt_off'
+alias activatePrompt='mv ~/.bash_prompt_off ~/.bash_prompt'
+alias COMPILE="(cd ~/cs3231/asst3-src/kern/compile/ASST3; bmake && bmake install)"
+alias DCOMPILE="(cd ~/cs3231/asst3-src/kern/compile/ASST3; bmake depend && bmake && bmake install)"
+
+# Stops the dreaded __py_cache__ folder
+export PYTHONDONTWRITEBYTECODE=1
+
+# Git commands
+alias gpl='git pull'
+alias gps='git push'
+alias gfc='git fetch'
+alias gck='git checkout'
+alias ga='git add'
+alias gc='git commit -m'
+
+#start python envs
+pygo() {
+   if [ -z $1 ] #empty string
+   then
+      DEFAULT='venv'
+   else
+      DEFAULT=$1
+   fi
+   source $DEFAULT/bin/activate
+}
+
+gogogadget() {
+   pygo $1
+}
+
+pregister() {
+  if [ -z $1 ] #empty string
+   then
+      echo Enter a file name
+   else
+    echo
+     # sudo subl /usr/bin/$1  --command "{echo Text to be in the editor}"
+   fi
+   sudo nautilus /usr/bin &
+}
+
+picon() {
+  if [ -z $1 ] #empty string
+   then
+      echo Enter a file name
+   else
+    echo
+     # sudo subl /usr/share/applications/$1  --command "{echo Text to be in the editor}"
+   fi
+   sudo nautilus /usr/share/applications &
+}
+
+up() {                                          # move up by any number of directories
+  if [ -z $1 ]; then
+    cd ..
+    return 0
+  fi
+  COUNTER=$1
+  if [[ $COUNTER =~ ^[\-0-9]+$ ]] && (( COUNTER > 0)); then
+    while [[ $COUNTER -gt 0 ]]
+    do
+      UP="${UP}../"
+      COUNTER=$(( $COUNTER -1 ))
+    done
+    echo "cd $UP"
+    cd $UP
+    UP=''
+    return 0
+  else
+    echo 'Usage: up n'
+    return 1
+  fi
+}
