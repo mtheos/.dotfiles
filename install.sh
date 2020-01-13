@@ -1,13 +1,19 @@
 #!/bin/bash
 
 # Variables
-declare -a packages=(git npm vim zsh)
+declare -a packages=(git vim zsh)
 declare -a configs=( .bash_prompt .bashrc .gdbinit .gitconfig .npmrc .profile .term_aliases .term_bootscripts .term_manualscripts .vimrc .zshrc )
-CONFIG=~/.homedir_conf/configs
-TMP=~/.homedir_conf/tmp
-ZSH_CUSTOM=~/.oh-my-zsh/custom
-BIN_DIR=~/homedir_conf/desktop_entries/bin
-DESKTOP_DIR=~/homedir_conf/desktop_entries/desktop
+ROOT=~/.homedir_conf
+CONFIG=$ROOT/configs
+TMP=$ROOT/tmp
+ZSH_DIR=~/.oh-my-zsh
+ZSH_CUSTOM=$ZSH_DIR/custom
+BIN_DIR=$ROOT/desktop_entries/bin
+DESKTOP_DIR=$ROOT/desktop_entries/desktop
+
+ZSH_THEME_FROM=$ROOT/zsh_themes/muse_mod.zsh-theme
+ZSH_THEME_TO=$ZSH_CUSTOM/themes/muse_mod.zsh-theme
+
 
 # Repo clone locations
 #OHMYZSH_LOC=~/.oh-my-zsh
@@ -27,12 +33,43 @@ PWNDBG=https://github.com/pwndbg/pwndbg
 OHMYZSH=https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 
 # Functions
+
+pause() {
+   read -p Pausing...
+}
+
 command_exists() {
    command -v $@ >/dev/null 2>&1
 }
 
+identify_package_manager() {
+   declare -A osInfo;
+   osInfo[/etc/redhat-release]="yum install -y"
+   osInfo[/etc/arch-release]="pacman -S --noconfirm"
+   osInfo[/etc/gentoo-release]="emerge -a"
+   osInfo[/etc/SuSE-release]="zypp install -y"
+   osInfo[/etc/debian_version]="apt install -y"
+
+   if ! [ -z $PACMAN ] ; then
+      echo "PACMAN set in shell. Using => $PACMAN"
+      return
+   else
+      echo Package manager not set... Trying to identify
+   fi
+   for f in ${!osInfo[@]} ; do
+      if [[ -f $f ]];then
+         echo Setting PACMAN to ${osInfo[$f]}
+         PACMAN=${osInfo[$f]}
+	 echo Set manually if not correct
+	 return
+      fi
+   done
+   echo Package manager not identified. Set PACMAN with package manager
+   exit 1
+}
+
 install_package() {
-   sudo apt install $@ -y
+   sudo $PACMAN $@
 }
 
 install_packages() {
@@ -80,9 +117,9 @@ link_configs() {
 
 # run oh-my-zsh install script
 install_ohmyzsh() {
-   if ! [ -d $ZSH ]; then
+   if ! [ -d $ZSH_DIR ]; then
       echo Installing oh-my-zsh
-      sh -c $(curl -fsSL $OHMYZSH)
+      sh -c "$(curl -fsSL $OHMYZSH)"
    else
       echo .oh-my-zsh exists, skipping installation
    fi
@@ -113,6 +150,10 @@ install_zsh_syntax_highlighting() {
    fi
 }
 
+install_zsh_themes() {
+	cp $ZSH_THEME_FROM $ZSH_THEME_TO
+}
+
 install_vundle() {
    if ! [ -d $VUNDLE_LOC ]; then
       echo Installing Vundle
@@ -125,7 +166,7 @@ install_vundle() {
 
 
 install_pwndbg() {
-   if ! [ -d $ZSH ]; then
+   if ! [ -d $PWNDBG_LOC ]; then
       echo Installing pwndbg
       mkdir -p $PWNDBG_LOC
       git clone $PWNDBG $PWNDBG_LOC
@@ -136,19 +177,17 @@ install_pwndbg() {
 }
 
 create_desktop_links() {
-   for file in $BIN_DIR ; do
+      for file in $(ls $BIN_DIR) ; do
       if ! [ -f /usr/bin/$file ] ; then
-         echo Creating /usr/bin/$file
-         cp $BIN_DIR/$file /usr/bin/$file
+         sudo cp $BIN_DIR/$file /usr/bin/$file && echo Creating /usr/bin/$file
       else
          echo File /usr/bin/$file exists
       fi
    done
 
-   for file in $DESKTOP_DIR ; do
-      if ! [ -f /usr/bin/$file ] ; then
-         echo Creating /usr/bin/$file
-         cp $DESKTOP_DIR/$file /usr/share/applications/$file
+   for file in $(ls $DESKTOP_DIR) ; do
+      if ! [ -f /usr/share/applications/$file ] ; then
+         sudo cp $DESKTOP_DIR/$file /usr/share/applications/$file && echo Creating /usr/share/applications/$file
       else
          echo File /usr/share/applications/$file exists
       fi
@@ -157,17 +196,18 @@ create_desktop_links() {
 
 main() {
    title_script
+   identify_package_manager
    while [ $# -gt 0 ]; do
       case $1 in
-         --update) APT_UPDATE=yes;
+         --update) UPDATE=yes;
       esac
       shift
    done
-   if ! [ -z $APT_UPDATE ]; then
+   if ! [ -z $UPDATE ]; then
       echo Updating pacakge definitions...
       sudo apt update
    else
-      echo Running without updating apt, use --update to change this behaviour
+      echo Running without updating, use --update to change this behaviour
    fi
 
    # Install basic packages
@@ -176,6 +216,9 @@ main() {
    install_ohmyzsh
    # Install oh-my-zsh addons
    install_zsh_addons
+pause
+   install_zsh_themes
+pause
    # Install Vundle
    install_vundle
    # Install pwndbg
