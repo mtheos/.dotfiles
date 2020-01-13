@@ -2,7 +2,7 @@
 
 # Variables
 declare -a packages=(git vim zsh)
-declare -a configs=( .bash_prompt .bashrc .gdbinit .gitconfig .npmrc .profile .term_aliases .term_bootscripts .term_manualscripts .vimrc .zshrc )
+declare -a configs=( .bash_prompt .gdbinit .gitconfig. term_aliases .term_bootscripts .term_manualscripts .vimrc .zshrc )
 ROOT=~/.homedir_conf
 CONFIG=$ROOT/configs
 TMP=$ROOT/tmp
@@ -31,12 +31,9 @@ PWNDBG=https://github.com/pwndbg/pwndbg
 
 # Scripts
 OHMYZSH=https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+OHMYZSH_FILE=ohmyzsh.sh
 
 # Functions
-
-pause() {
-   read -p Pausing...
-}
 
 command_exists() {
    command -v $@ >/dev/null 2>&1
@@ -119,7 +116,11 @@ link_configs() {
 install_ohmyzsh() {
    if ! [ -d $ZSH_DIR ]; then
       echo Installing oh-my-zsh
-      sh -c "$(curl -fsSL $OHMYZSH)"
+      pause
+      wget $OHMYZSH -O $ROOT/$OHMYZSH_FILE
+      export RUNZSH=no
+      sh $ROOT/$OHMYZSH_FILE
+      rm $ROOT/$OHMYZSH_FILE
    else
       echo .oh-my-zsh exists, skipping installation
    fi
@@ -216,9 +217,7 @@ main() {
    install_ohmyzsh
    # Install oh-my-zsh addons
    install_zsh_addons
-pause
    install_zsh_themes
-pause
    # Install Vundle
    install_vundle
    # Install pwndbg
