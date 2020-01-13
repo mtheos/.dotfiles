@@ -6,6 +6,8 @@ declare -a configs=( .bash_prompt .bashrc .gdbinit .gitconfig .npmrc .profile .t
 CONFIG=~/.homedir_conf/configs
 TMP=~/.homedir_conf/tmp
 ZSH_CUSTOM=~/.oh-my-zsh/custom
+BIN_DIR=~/homedir_conf/desktop_entries/bin
+DESKTOP_DIR=~/homedir_conf/desktop_entries/desktop
 
 # Repo clone locations
 #OHMYZSH_LOC=~/.oh-my-zsh
@@ -35,8 +37,7 @@ install_package() {
 
 install_packages() {
    echo; echo Installing packages
-   for pkg in ${packages[@]}
-   do
+   for pkg in ${packages[@]} ; do
       echo -n "  * Trying $pkg..."
       if ! command_exists $pkg; then
          install_package $pkg
@@ -49,8 +50,7 @@ install_packages() {
 
 check_configs_exist() {
    echo; echo Checking configs
-   for conf in ${configs[@]}
-   do
+   for conf in ${configs[@]} ; do
       echo -n "  * Trying $conf..."
       if [ -f $CONFIG/$conf ]; then
          echo Exists!
@@ -62,13 +62,12 @@ check_configs_exist() {
 
 link_configs() {
    echo; echo Linking configs
-   for conf in ${configs[@]}
-   do
+   for conf in ${configs[@]} ; do
       echo -n "  * Trying $conf..."
       if [ -f $CONFIG/$conf ]; then
          if [ -f ~/$conf ]; then
             if ! [ -h ~/$conf ]; then
-               mv ~/$conf "$TMP/$conf.bup"
+               mv ~/$conf $TMP/$conf.bup
             fi
          fi
          ln -s $CONFIG/$conf ~/$conf
@@ -81,28 +80,79 @@ link_configs() {
 
 # run oh-my-zsh install script
 install_ohmyzsh() {
-   if [ -d "$ZSH" ]; then
-      echo ".oh-my-zsh already exists, skipping installation"
+   if ! [ -d $ZSH ]; then
+      echo Installing oh-my-zsh
+      sh -c $(curl -fsSL $OHMYZSH)
    else
-      echo "Installing oh-my-zsh"
-      sh -c "$(curl -fsSL $OHMYZSH)"
+      echo .oh-my-zsh exists, skipping installation
    fi
 }
 
 install_zsh_addons() {
-   git clone $ZSH_AUTO_COMPLETE $ZSH_AUTO_COMPLETE_LOC
-   git clone $ZSH_SYNTAX_HIGHLIGHTING $ZSH_SYNTAX_HIGHLIGHTING_LOC
+   install_zsh_auto_complete
+   install_zsh_syntax_highlighting
+}
+
+install_zsh_auto_complete() {
+   if ! [ -d $ZSH_AUTO_COMPLETE_LOC ]; then
+      echo Installing ZSH Auto Complete
+      mkdir -p $ZSH_AUTO_COMPLETE_LOC
+      git clone $ZSH_AUTO_COMPLETE $ZSH_AUTO_COMPLETE_LOC
+   else
+      echo ZSH Auto Complete exists, skipping installation
+   fi
+}
+
+install_zsh_syntax_highlighting() {
+   if ! [ -d $ZSH_SYNTAX_HIGHLIGHTING_LOC ]; then
+      echo Installing ZSH Syntax Highlighting
+      mkdir -p $ZSH_SYNTAX_HIGHLIGHTING_LOC
+      git clone $ZSH_SYNTAX_HIGHLIGHTING $ZSH_SYNTAX_HIGHLIGHTING_LOC
+   else
+      echo ZSH Syntax Highlighting exists, skipping installation
+   fi
 }
 
 install_vundle() {
-   git clone $VUNDLE $VUNDLE_LOC
+   if ! [ -d $VUNDLE_LOC ]; then
+      echo Installing Vundle
+      mkdir -p $VUNDLE_LOC
+      git clone $VUNDLE $VUNDLE_LOC
+   else
+      echo Vundle exists, skipping installation
+   fi
 }
 
 
 install_pwndbg() {
-   mkdir -p $PWNDBG_LOC
-   git clone $PWNDBG $PWNDBG_LOC
-   sh -c "$(cd $PWNDBG_LOC; ./setup.sh)"
+   if ! [ -d $ZSH ]; then
+      echo Installing pwndbg
+      mkdir -p $PWNDBG_LOC
+      git clone $PWNDBG $PWNDBG_LOC
+      sh -c $(cd $PWNDBG_LOC; ./setup.sh)
+   else
+      echo Pwndbg exists, skipping installation
+   fi
+}
+
+create_desktop_links() {
+   for file in $BIN_DIR ; do
+      if ! [ -f /usr/bin/$file ] ; then
+         echo Creating /usr/bin/$file
+         cp $BIN_DIR/$file /usr/bin/$file
+      else
+         echo File /usr/bin/$file exists
+      fi
+   done
+
+   for file in $DESKTOP_DIR ; do
+      if ! [ -f /usr/bin/$file ] ; then
+         echo Creating /usr/bin/$file
+         cp $DESKTOP_DIR/$file /usr/share/applications/$file
+      else
+         echo File /usr/share/applications/$file exists
+      fi
+   done
 }
 
 main() {
@@ -114,10 +164,10 @@ main() {
       shift
    done
    if ! [ -z $APT_UPDATE ]; then
-      echo "Updating pacakge definitions..."
+      echo Updating pacakge definitions...
       sudo apt update
    else
-      echo "Running without updating apt, use --update to change this behaviour"
+      echo Running without updating apt, use --update to change this behaviour
    fi
 
    # Install basic packages
@@ -130,6 +180,7 @@ main() {
    install_vundle
    # Install pwndbg
    install_pwndbg
+   create_desktop_links
    # Notify if any config files don't exist
    check_configs_exist
    # Link all config files that do exist
@@ -137,7 +188,7 @@ main() {
 
 }
 
-# Tooooo big
+# Too big
 title_caligraphy() {
    cat <<-'EOF'
 

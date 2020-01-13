@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Intellij
+GenericName=Java IDE
+Comment=Java IDE by Jet Brains
+Exec=/usr/bin/intellij
+Terminal=false
+MimeType=text/plain;
+Icon=~/opt/idea/bin/idea.png
+Categories=IDE;Development;
+StartupNotify=true

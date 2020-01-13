@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=WebStorm
+GenericName=JavaScript IDE
+Comment=JavaScript IDE by Jet Brains
+Exec=/usr/bin/webstorm
+Terminal=false
+MimeType=text/plain;
+Icon=~/opt/webstorm/bin/webstorm.png
+Categories=IDE;Development;
+StartupNotify=true

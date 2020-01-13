@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=CLion
+GenericName=C IDE
+Comment=C IDE by Jet Brains
+Exec=/usr/bin/clion
+Terminal=false
+MimeType=text/plain;
+Icon=~/opt/clion/bin/clion.png
+Categories=TextEditor;Development;
+StartupNotify=true
