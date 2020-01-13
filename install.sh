@@ -152,7 +152,7 @@ install_zsh_syntax_highlighting() {
 }
 
 install_zsh_themes() {
-	cp $ZSH_THEME_FROM $ZSH_THEME_TO
+	ln -s $ZSH_THEME_FROM $ZSH_THEME_TO
 }
 
 install_vundle() {

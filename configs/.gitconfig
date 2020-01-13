@@ -1,5 +1,6 @@
 [core]
-	autocrlf = input
+	autocrlf = false
+	eol = lf
 [user]
 	name = Michael Theos
 	email = theos.michael@gmail.com
