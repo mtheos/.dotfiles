@@ -4,7 +4,7 @@
 umask 022
 
 # Variables
-declare -a packages=(curl git python3 python3-pip python python-pip vim wget zsh)
+declare -a packages=(git vim zsh)
 declare -a configs=( .bash_prompt .gdbinit .gitconfig .term_aliases .term_bootscripts .term_manualscripts .vimrc .zshrc )
 ROOT=~/.homedir_conf
 CONFIG=$ROOT/configs
@@ -219,6 +219,16 @@ clone_repo_if_missing() {
     fi
 }
 
+clean_up() {
+    directory=$(cd `dirname $0` && pwd)
+    file=$(basename $0)
+    if ! [ $directory = $ROOT ] ; then
+        echo Clearing script
+        echo Script can be run from $ROOT/install.sh
+        rm $directory/$file
+    fi
+}
+
 main() {
     title_script
     identify_package_manager
@@ -243,6 +253,8 @@ main() {
     check_configs_exist
     # Link all config files that do exist
     link_configs
+    # Delete script if not in home_conf dir
+    clean_up
 }
 
 # Nice but too big
