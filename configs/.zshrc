@@ -76,7 +76,7 @@ source $ZSH/oh-my-zsh.sh
 if [[ -f ~/.term_aliases ]]; then
    source ~/.term_aliases
 fi
-
+umask 022
 PATH=$PATH:~/.local/bin
 
 # export MANPATH="/usr/local/man:$MANPATH"

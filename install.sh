@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#set umask
+umask 022
+
 # Variables
 declare -a packages=(git vim zsh)
 declare -a configs=( .bash_prompt .gdbinit .gitconfig .term_aliases .term_bootscripts .term_manualscripts .vimrc .zshrc )
