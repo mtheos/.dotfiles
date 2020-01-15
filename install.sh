@@ -255,6 +255,8 @@ main() {
     link_configs
     # Delete script if not in home_conf dir
     clean_up
+    # Drop into the ZSH shell... Don't exec so we can jump back if necessary
+    zsh
 }
 
 # Nice but too big
