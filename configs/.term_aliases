@@ -46,6 +46,7 @@ export PYTHONDONTWRITEBYTECODE=1
 alias gpl='git pull'
 alias gps='git push'
 alias gfc='git fetch'
+alias gfcpl='gfc; gpl'
 alias gck='git checkout'
 alias ga='git add'
 alias gc='git commit -m'
