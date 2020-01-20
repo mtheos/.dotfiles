@@ -49,6 +49,7 @@ alias gfc='git fetch'
 alias gfcpl='gfc; gpl'
 alias gck='git checkout'
 alias ga='git add'
+alias gs='git status'
 alias gc='git commit -m'
 
 #start python envs
