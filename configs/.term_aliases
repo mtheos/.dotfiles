@@ -10,6 +10,7 @@ alias te='konsole . &'                                                         #
 alias runscripts='~/.term_manualscripts'                                       # run .term_manualscripts
 
 alias sudo='sudo '
+alias sua='sudo apt update; sudo apt upgrade -y'
 alias applications='cd /usr/share/applications && ls'
 alias explore='nautilus . &'
 alias exp='nautilus . &'
