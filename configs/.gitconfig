@@ -3,6 +3,7 @@
 	eol = lf
 [user]
 	name = Michael Theos
-	email = theos.michael@gmail.com
+	email = michael@theos.me
+	signingkey = 5B87C4FC5C2AFAE7
 [color]
 	ui = auto
