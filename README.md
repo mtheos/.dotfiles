@@ -8,4 +8,4 @@ Will symlink from ~/.xxx to ~/.homedir_conf/configs/.xxx so updates to the files
 
 TODO:
  - Make sua (update all) alias system independent
- - create periodic update check and prompt to update like zsh (cron?)
+ - create periodic update check and prompt to update like oh-my-zsh (cron?)
