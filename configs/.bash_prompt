@@ -1,3 +1,4 @@
+# Custom prompt for bash. Unused since I switched to zsh
 # disable the default virtualenv prompt change
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
