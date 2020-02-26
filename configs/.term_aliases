@@ -117,7 +117,7 @@ sua() {
     osInfo[/etc/arch-release]="sudo pacman -Syu --noconfirm; sudo pacman -Sc --noconfirm"
     osInfo[/etc/gentoo-release]="sudo emerge --sync; sudo emerge --update --deep --with-bdeps=y @world"
     osInfo[/etc/SuSE-release]="sudo zypp refresh -y; sudo zypp update -y; sudo zypp packages --unneeded"
-    osInfo[/etc/debian_version]="sudo apt update; sudo apt upgrade -y; sudo apt autoremove"
+    osInfo[/etc/debian_version]="sudo apt update; sudo apt upgrade -y; sudo apt autoremove -y"
 
     if ! [ -z $PACMAN ] ; then
         echo "PACMAN set in shell. Using => $PACMAN"
