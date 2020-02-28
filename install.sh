@@ -59,13 +59,13 @@ identify_package_manager() {
     fi
     for f in ${!osInfo[@]} ; do
         if [[ -f $f ]];then
-            echo Setting PACMAN to ${osInfo[$f]}
+            echo Using PACMAN ${osInfo[$f]}
             PACMAN=${osInfo[$f]}
             echo Set manually if not correct
             return
         fi
     done
-   echo Package manager not identified. Set PACMAN with package manager
+   echo Package manager not identified. Set PACMAN with install command \"sudo apt install...\"
    exit 1
 }
 
