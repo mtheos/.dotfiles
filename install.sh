@@ -6,6 +6,7 @@ umask 022
 # Variables
 declare -a packages=(git vim zsh)
 declare -a configs=( .bash_prompt .gdbinit .gitconfig .term_aliases .term_bootscripts .term_manualscripts .vimrc .zshrc )
+HOME_DIR_REPO=https://github.com/mtheos/.homedir_conf.git
 ROOT=~/.homedir_conf
 CONFIG=$ROOT/configs
 TMP=$ROOT/tmp
@@ -215,7 +216,7 @@ create_desktop_links() {
 
 clone_repo_if_missing() {
     if ! [ -d $ROOT ]; then
-        git clone git@github.com:mtheos/.homedir_conf.git $ROOT
+        git clone $HOME_DIR_REPO $ROOT
     fi
 }
 
