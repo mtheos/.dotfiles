@@ -4,7 +4,7 @@
 umask 022
 
 # Variables
-declare -a packages=(git vim zsh)
+declare -a packages=(git vim curl wget zsh)
 declare -a configs=( .bash_prompt .gdbinit .gitconfig .term_aliases .term_bootscripts .term_manualscripts .vimrc .zshrc )
 HOME_DIR_REPO=https://github.com/mtheos/.homedir_conf.git
 ROOT=~/.homedir_conf
@@ -135,7 +135,6 @@ link_configs() {
 install_ohmyzsh() {
     if ! [ -d $ZSH_DIR ]; then
         echo Installing oh-my-zsh
-        pause
         wget $OHMYZSH -O $ROOT/$OHMYZSH_FILE
         export RUNZSH=no
         sh $ROOT/$OHMYZSH_FILE
