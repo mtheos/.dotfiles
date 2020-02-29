@@ -5,7 +5,7 @@ umask 022
 
 # Variables
 declare -a packages=(git vim curl wget zsh)
-declare -a configs=( .bash_prompt .gdbinit .gitconfig .term_aliases .term_bootscripts .term_manualscripts .vimrc .zshrc )
+declare -a configs=( .bash_prompt .gdbinit .gitconfig .aliases .bootscripts .manualscripts .vimrc .zshrc )
 HOME_DIR_REPO=https://github.com/mtheos/.homedir_conf.git
 ROOT=~/.homedir_conf
 CONFIG=$ROOT/configs
