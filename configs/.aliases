@@ -1,12 +1,12 @@
 # alias name='command'
-alias ea='subl ~/.term_aliases &'                                              # Open alias file
-alias sa='source ~/.term_aliases && echo "Aliases sourced  --ok."'             # Source alias file
+alias ea='subl ~/.aliases &'                                              # Open alias file
+alias sa='source ~/.aliases && echo "Aliases sourced  --ok."'             # Source alias file
 alias ep='subl ~/.bash_prompt &'                                               # Open promp file
 alias sp='source ~/.bash_prompt && echo "Prompt sourced  --ok."'               # Source prompt file
-alias es='subl ~/.term_autoscripts &'                                          # Open autoscripts file
-alias ss='source ~/.term_autoscripts && echo "Scripts sourced  --ok."'         # Source autoscripts file
+alias es='subl ~/.autoscripts &'                                          # Open autoscripts file
+alias ss='source ~/.autoscripts && echo "Scripts sourced  --ok."'         # Source autoscripts file
 alias te='konsole . &'                                                         # Open a new console
-alias runscripts='~/.term_manualscripts'                                       # run .term_manualscripts
+alias runscripts='~/.manualscripts'                                       # run .term_manualscripts
 
 alias sudo='sudo '
 # See function below

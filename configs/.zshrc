@@ -73,11 +73,22 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 # Import aliases
-if [[ -f ~/.term_aliases ]]; then
-   source ~/.term_aliases
+if [[ -f ~/.aliases ]]; then
+   source ~/.aliases
+else
+   echo "~/.aliases file not found"
 fi
-umask 022
-PATH=$PATH:~/.local/bin
+
+# Run Bootscripts (set path etc)
+if [[ -f ~/.bootscripts ]]; then
+   source ~/.bootscripts
+else
+   echo "~/.bootscripts file not found"
+fi
+
+# Moved to bootscripts
+# umask 022
+# PATH=$PATH:~/.local/bin
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
