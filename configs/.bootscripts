@@ -6,4 +6,4 @@
 
 umask 022
 PATH=$PATH:~/.local/bin
-PATH=$PATH:"$(yarn global bin)"
+PATH=$PATH:~/.yarn/bin
