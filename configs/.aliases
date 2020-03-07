@@ -1,5 +1,6 @@
 # alias name='command'
 alias hup='(cd ~/.homedir_conf; git pull)'
+alias hst='(cd ~/.homedir_conf; git status)'
 # See function below
 # alias hgt='(cd ~/.homedir_conf; git add .; git commit -m "alias update"; git push)'
 alias ea='subl ~/.aliases &'                                              # Open alias file
