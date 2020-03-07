@@ -1,4 +1,7 @@
 # alias name='command'
+alias hup='(cd ~/.homedir_conf; git pull)'
+# See function below
+# alias hgt='(cd ~/.homedir_conf; git add .; git commit -m "alias update"; git push)'
 alias ea='subl ~/.aliases &'                                              # Open alias file
 alias sa='source ~/.aliases && echo "Aliases sourced  --ok."'             # Source alias file
 alias ep='subl ~/.bash_prompt &'                                               # Open promp file
@@ -121,7 +124,7 @@ sua() {
 
     # This is ZSH syntax for looping... Will not work with bash
     for k v in ${(kv)osInfo[@]}; do
-        if [[ -f $k ]];then
+        if [[ -f $k ]]; then
             echo Using command $v
             command=("${(@s/; /)v}")
             for x in ${command[@]}; do
@@ -132,4 +135,22 @@ sua() {
         fi
     done
    echo Update command not known. Set for sua\(\) in .aliases
+}
+
+# alias hgt='(cd ~/.homedir_conf; git add .; git commit -m "alias update"; git push)'
+hgt() {
+   if [ $# -ne 1 ] ; then
+      echo "usage: hgt <commit message>"
+      return
+   fi
+   cd ~/.homedir_conf
+   if [ -z "$(git status --untracked-files=no --porcelain)" ] ; then
+      echo "Home config clean, no changes."
+      return
+   fi
+   git add .
+   git commit -m "$1"
+   git push
+   cd -
+   echo "Home config changes pushed."
 }
