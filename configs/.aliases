@@ -1,8 +1,8 @@
 # alias name='command'
-alias hup='(cd ~/.homedir_conf; git pull)'
+alias hpl='(cd ~/.homedir_conf; git pull)'
 alias hst='(cd ~/.homedir_conf; git status)'
 # See function below
-# alias hgt='(cd ~/.homedir_conf; git add .; git commit -m "alias update"; git push)'
+# alias hps='(cd ~/.homedir_conf; git add .; git commit -m "alias update"; git push)'
 alias ea='subl ~/.aliases &'                                              # Open alias file
 alias sa='source ~/.aliases && echo "Aliases sourced  --ok."'             # Source alias file
 alias ep='subl ~/.bash_prompt &'                                               # Open promp file
@@ -139,7 +139,7 @@ sua() {
 }
 
 # alias hgt='(cd ~/.homedir_conf; git add .; git commit -m "alias update"; git push)'
-hgt() {
+hps() {
    if [ $# -ne 1 ] ; then
       echo "usage: hgt <commit message>"
       return
