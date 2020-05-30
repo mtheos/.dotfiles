@@ -169,7 +169,7 @@ install_zsh_syntax_highlighting() {
     fi
 }
 
-install_zsh_themes() {
+install_zsh_theme() {
     ln -s $ZSH_THEME_FROM $ZSH_THEME_TO
 }
 
@@ -243,7 +243,7 @@ main() {
     # Install oh-my-zsh addons
     install_zsh_addons
     # Install oh-my-zsh theme(s)
-    install_zsh_themes
+    install_zsh_theme
     # Install Vundle
     install_vundle
     # Install pwndbg
