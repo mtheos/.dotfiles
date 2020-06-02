@@ -5,5 +5,7 @@
 # xset m 50 50
 
 umask 022
-PATH=$PATH:~/.local/bin
-PATH=$PATH:~/.yarn/bin
+PATH="$HOME/.yarn/bin:$PATH"
+PATH="$HOME/.local/lib/go/bin:$PATH"
+PATH="$HOME/.cargo/bin/:$PATH"
+
