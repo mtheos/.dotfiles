@@ -45,6 +45,10 @@ alias DCOMPILE="(cd ~/cs3231/asst3-src/kern/compile/ASST3; bmake depend && bmake
 
 # h4x
 alias fault="dmesg -T | tail | grep segfault"
+alias objdump="objdump -M intel"
+alias wgcc="gcc -m32 -no-pie -fno-stack-protector"  # to compile 6447 binaries
+# bof() see below
+# binfo() see below
 
 # Stops the dreaded __py_cache__ folder
 export PYTHONDONTWRITEBYTECODE=1
@@ -58,6 +62,26 @@ alias gck='git checkout'
 alias ga='git add'
 alias gs='git status'
 alias gc='git commit -m'
+
+bof() {
+    cyclic -l `cyclic 200 | strace ./$1 3>&1 1>&2 2>&3 3>&- | grep si_addr | sed -E 's/.*si_addr=(.*)}.*/\1/g'`
+}
+
+binfo() {
+    NC='\033[1;0m'
+    RED='\033[1;31m'
+    GREEN='\033[1;32m'
+    YELLOW='\033[1;33m'
+    PURPLE='\033[1;35m'
+    WHITE='\033[1;37m'
+    pwnme=$1
+    checksec ${pwnme}
+    paste <(echo "${WHITE}FUNCTIONS/SYMBOLS${NC}"; rabin2 -qs ${pwnme} | egrep -ve ' (0|1) ' -e imp -e ' _' | sort -k 1) /dev/null <(echo "${GREEN}STRINGS${NC}"; rabin2 -z ${pwnme}) | column -s $'\t' -tn
+    echo "${YELLOW}LIBRARY FUNCTIONS${NC}"
+    echo "${RED}Pwnable:${NC}"
+    rabin2 -i ${pwnme} | egrep '(gets|scanf|strcpy|strcat|strncat|malloc|system)' | cut -c5- | sed 's/scanf/scanf (one-byte overflow if field width is equal to buffer length)/' | sed 's/malloc/malloc (probably heap pwnable)/' | sed 's/system/system (probably a win function!!!)/'
+    echo "${PURPLE}Leakable:${NC}"; rabin2 -i ${pwnme} | egrep '(read|strncpy|memcpy)' | cut -c5-
+}
 
 #start python envs
 pygo() {
