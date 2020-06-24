@@ -4,8 +4,9 @@
 umask 022
 
 # Variables
-declare -a packages=(git vim curl wget zsh)
+declare -a packages=(git vim nvim curl wget zsh)
 declare -a configs=( .bash_prompt .gdbinit .gitconfig .aliases .bootscripts .manualscripts .vimrc .zshrc )
+NVIM_CONF=init.vim # Why is nvim different! -_-
 HOME_DIR_REPO=https://github.com/mtheos/.homedir_conf.git
 ROOT=~/.homedir_conf
 CONFIG=$ROOT/configs
@@ -124,11 +125,24 @@ link_configs() {
                 fi
             fi
             ln -s $CONFIG/$conf ~/$conf
-            echo "Linking configs/$conf ===> ~/$conf"
+            echo "Linked configs/$conf ===> ~/$conf"
         else 
             echo Skipping! $conf not found!
         fi
     done
+}
+
+link_nvim() {
+    rm ~/$NVIM_CONF # previous step will link this into the home dir... nvim is "special"
+    echo; echo Linking nvim
+        echo -n "  * Trying $conf..."
+    if [ -f $CONFIG/$NVIM_CONF ]; then
+        mkdir ~/.config/nvim
+        ln -s $CONFIG/$NVIM_CONF ~/.config/nvim/$NVIM_CONF
+        echo "Linked configs/nvim ===> ~/.config/nvim/$NVIM_CONF"
+    else 
+        echo Skipping! $NVIM_CONF not found!
+    fi
 }
 
 # run oh-my-zsh install script
@@ -253,6 +267,7 @@ main() {
     check_configs_exist
     # Link all config files that do exist
     link_configs
+    link_nvim
     # Delete script if not in home_conf dir
     clean_up
     # Drop into the ZSH shell... Don't exec so we can jump back if necessary
