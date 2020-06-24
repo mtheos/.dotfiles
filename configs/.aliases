@@ -43,6 +43,9 @@ alias activatePrompt='mv ~/.bash_prompt_off ~/.bash_prompt'
 alias COMPILE="(cd ~/cs3231/asst3-src/kern/compile/ASST3; bmake && bmake install)"
 alias DCOMPILE="(cd ~/cs3231/asst3-src/kern/compile/ASST3; bmake depend && bmake && bmake install)"
 
+# replace programs
+alias vim=nvim
+
 # h4x
 alias fault="dmesg -T | tail | grep segfault"
 alias objdump="objdump -M intel"
