@@ -30,6 +30,9 @@ Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 " GLSL syntax highlight
 Plugin 'tikhomirov/vim-glsl'
 
+" Function names and arguments
+Plugin 'dense-analysis/ale'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -53,3 +56,5 @@ set tabstop=3
 set shiftwidth=3
 set expandtab
 color desert
+
+
