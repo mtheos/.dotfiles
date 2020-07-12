@@ -4,8 +4,9 @@
 umask 022
 
 # Variables
-declare -a packages=(git vim nvim curl wget zsh)
+declare -a packages=(git guake vim nvim curl wget zsh)
 declare -a configs=( .bash_prompt .gdbinit .gitconfig .aliases .bootscripts .manualscripts .vimrc .zshrc )
+GUAKE_PREFERENCES=guake.dconf
 NVIM_CONF=init.vim # Why is nvim different! -_-
 HOME_DIR_REPO=https://github.com/mtheos/.homedir_conf.git
 ROOT=~/.homedir_conf
@@ -135,13 +136,24 @@ link_configs() {
 link_nvim() {
     rm ~/$NVIM_CONF # previous step will link this into the home dir... nvim is "special"
     echo; echo Linking nvim
-        echo -n "  * Trying $conf..."
+        echo -n "  * Trying $NVIM_CONF..."
     if [ -f $CONFIG/$NVIM_CONF ]; then
         mkdir ~/.config/nvim
         ln -s $CONFIG/$NVIM_CONF ~/.config/nvim/$NVIM_CONF
         echo "Linked configs/nvim ===> ~/.config/nvim/$NVIM_CONF"
     else 
         echo Skipping! $NVIM_CONF not found!
+    fi
+}
+
+guake_preferences() {
+    echo; echo Setting up Guake preferences
+        echo -n "  * Trying $GUAKE_PREFERENCES..."
+    if [ -f $CONFIG/$GUAKE_PREFERENCES ]; then
+        dconf load /apps/guake/ < $CONFIG/$GUAKE_PREFERENCES
+        echo "imported $GUAKE_PREFERENCES"
+    else 
+        echo Skipping! $GUAKE_PREFERENCES not found!
     fi
 }
 
@@ -268,6 +280,7 @@ main() {
     # Link all config files that do exist
     link_configs
     link_nvim
+    guake_preferences
     # Delete script if not in home_conf dir
     clean_up
     # Drop into the ZSH shell... Don't exec so we can jump back if necessary
