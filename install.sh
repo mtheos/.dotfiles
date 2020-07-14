@@ -4,7 +4,7 @@
 umask 022
 
 # Variables
-declare -a packages=(git guake vim nvim curl wget zsh)
+declare -a packages=(git guake vim neovim curl wget zsh)
 declare -a configs=( .bash_prompt .gdbinit .gitconfig .aliases .bootscripts .manualscripts .vimrc .zshrc )
 GUAKE_PREFERENCES=guake.dconf
 NVIM_CONF=init.vim # Why is nvim different! -_-
