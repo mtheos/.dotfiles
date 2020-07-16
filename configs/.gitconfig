@@ -9,3 +9,6 @@
 	ui = auto
 [alias]
 	supdate = submodule update --remote --merge
+[pull]
+   rebase = true
+
