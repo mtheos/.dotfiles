@@ -7,3 +7,5 @@
 	signingkey = 5B87C4FC5C2AFAE7
 [color]
 	ui = auto
+[alias]
+	supdate = submodule update --remote --merge
