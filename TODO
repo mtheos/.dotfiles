@@ -1,0 +1,8 @@
+Add powerpill for manjaro
+
+https://xyne.archlinux.ca/projects/powerpill/pkgbuild.tar.gz
+
+pacman-key --export 1D1F0DC78F173680 > xyne.asc
+gpg --import xyne.asc
+ makepkg -si
+
