@@ -20,16 +20,15 @@ DESKTOP_DIR=$ROOT/desktop_entries/desktop
 ZSH_THEME_FROM=$ROOT/zsh_themes/muse_mod.zsh-theme
 ZSH_THEME_TO=$ZSH_CUSTOM/themes/muse_mod.zsh-theme
 
-
-# Repo clone locations
-#OHMYZSH_LOC=~/.oh-my-zsh
+# Repo path locations
+# OHMYZSH_LOC=~/.oh-my-zsh
 ZSH_AUTO_COMPLETE_LOC=$ZSH_CUSTOM/plugins/zsh-autosuggestions
 ZSH_SYNTAX_HIGHLIGHTING_LOC=$ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 VUNDLE_LOC=~/.vim/bundle/Vundle.vim
 PWNDBG_LOC=~/.local/lib/pwndbg
 
-# Repos
-#OHMYZSH=https://github.com/ohmyzsh/ohmyzsh.git
+# Repo github URLs
+# OHMYZSH=https://github.com/ohmyzsh/ohmyzsh.git
 ZSH_AUTO_COMPLETE=https://github.com/zsh-users/zsh-autosuggestions.git
 ZSH_SYNTAX_HIGHLIGHTING=https://github.com/zsh-users/zsh-syntax-highlighting.git
 VUNDLE=https://github.com/VundleVim/Vundle.vim.git
@@ -39,19 +38,24 @@ PWNDBG=https://github.com/pwndbg/pwndbg
 OHMYZSH=https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 OHMYZSH_FILE=ohmyzsh.sh
 
-# Functions
+# Powerpill AUR package
+POWERPILL=https://xyne.archlinux.ca/projects/powerpill/pkgbuild.tar.gz
+POWERPILL_NAME=pkgbuild.tar.gz
+POWERPILL_LOC=pkgbuild
+XYNE_PGP_SIG=1D1F0DC78F173680
 
+# Functions
 command_exists() {
     command -v $@ >/dev/null 2>&1
 }
 
 identify_package_manager() {
     declare -A osInfo;
-    osInfo[/etc/redhat-release]="yum install -y"
-    osInfo[/etc/arch-release]="pacman -S --noconfirm"
-    osInfo[/etc/gentoo-release]="emerge -a"
-    osInfo[/etc/SuSE-release]="zypp install -y"
-    osInfo[/etc/debian_version]="apt install -y"
+    osInfo[emerge]="emerge -a"
+    osInfo[apt]="apt install -y"
+    osInfo[yum]="yum install -y"
+    osInfo[zypp]="zypp install -y"
+    osInfo[pacman]="pacman -S --noconfirm"
 
     if ! [ -z $PACMAN ] ; then
         echo "PACMAN set in shell. Using => $PACMAN"
@@ -59,16 +63,18 @@ identify_package_manager() {
     else
         echo Package manager not set... Trying to identify
     fi
-    for f in ${!osInfo[@]} ; do
-        if [[ -f $f ]];then
-            echo Using PACMAN ${osInfo[$f]}
-            PACMAN=${osInfo[$f]}
+    
+    for cmd in ${!osInfo[@]} ; do
+        if command_exists $cmd; then
+            echo "Using => ${osInfo[$cmd]}"
+            PACMAN=${osInfo[$cmd]}
             echo Set manually if not correct
             return
         fi
     done
-   echo Package manager not identified. Set PACMAN with install command \"sudo apt install...\"
-   exit 1
+
+    echo Package manager not identified. Set PACMAN with install command \"sudo apt install...\"
+    exit 1
 }
 
 update_package_definitions() {
@@ -101,6 +107,27 @@ install_packages() {
             echo "Already installed :)"
         fi
     done
+}
+
+powerpill_arch_only() {
+    # If not arch do nothing
+    if [ ! -f /etc/arch-release ]; then
+        echo "Powerpill is an AUR package"
+        echo "Ignored as current OS is non-Arch (bad code if wrong)"
+        # return
+    fi
+
+    wget $POWERPILL -O $POWERPILL_NAME
+    tar -xf $POWERPILL_NAME
+    cd $POWERPILL_LOC
+
+    pacman-key --export $XYNE_PGP_SIG > xyne.asc
+    gpg --import xyne.asc
+    rm xyne.asc
+    makepkg -si
+    cd ..
+    rm -rf $POWERPILL_LOC
+    rm $POWERPILL_NAME
 }
 
 check_configs_exist() {
@@ -262,7 +289,7 @@ main() {
     update_package_definitions "$@"
     # Install basic packages
     install_packages
-    # Before this point we don't know we have git
+    # Before this point we may not have git
     clone_repo_if_missing
     # Install oh-my-zsh
     install_ohmyzsh
@@ -281,6 +308,7 @@ main() {
     link_configs
     link_nvim
     guake_preferences
+    powerpill_arch_only
     # Delete script if not in home_conf dir
     clean_up
     # Drop into the ZSH shell... Don't exec so we can jump back if necessary
@@ -289,7 +317,7 @@ main() {
 
 # Nice but too big
 title_caligraphy() {
-   cat <<-'EOF'
+    cat <<-'EOF'
 
      ***** *    **   ***              ***                                                              *****    **
   ******  *  *****    ***              ***                                                          ******  *  **** *
@@ -314,7 +342,7 @@ EOF
 }
 
 title_script() {
-   cat <<-'EOF'
+    cat <<-'EOF'
  _              _                              ,
 (_|   |   |_/  | |                            /|   |
   |   |   | _  | |  __   __   _  _  _    _     |___|  __   _  _  _    _
