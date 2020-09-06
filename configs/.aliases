@@ -89,74 +89,75 @@ binfo() {
 
 #start python envs
 pygo() {
-   if [ -z $1 ] #empty string
-   then
-      DEFAULT='venv'
-   else
-      DEFAULT=$1
-   fi
-   source $DEFAULT/bin/activate
+    if [ -z $1 ]; then # empty string
+        DEFAULT='venv'
+    else
+        DEFAULT=$1
+    fi
+    source $DEFAULT/bin/activate
 }
 
 gogogadget() {
-   pygo $1
+    pygo $1
 }
 
 pregister() {
-  if [ -z $1 ] #empty string
-   then
-      echo Enter a file name
-   else
-    echo
-     # sudo subl /usr/bin/$1  --command "{echo Text to be in the editor}"
-   fi
-   sudo nautilus /usr/bin &
+    if [ -z $1 ]; then # empty string
+        echo Enter a file name
+    else
+        echo
+        # sudo subl /usr/bin/$1  --command "{echo Text to be in the editor}"
+    fi
+    sudo nautilus /usr/bin &
 }
 
 picon() {
-  if [ -z $1 ] #empty string
-   then
-      echo Enter a file name
-   else
-    echo
-     # sudo subl /usr/share/applications/$1  --command "{echo Text to be in the editor}"
-   fi
-   sudo nautilus /usr/share/applications &
+  if [ -z $1 ]; then # empty string
+        echo Enter a file name
+    else
+        echo
+        # sudo subl /usr/share/applications/$1  --command "{echo Text to be in the editor}"
+    fi
+    sudo nautilus /usr/share/applications &
 }
 
 up() {    # move up by any number of directories
-  if [ -z $1 ]; then
-    cd ..
-    return 0
-  fi
-  COUNTER=$1
-  if [[ $COUNTER =~ ^[\-0-9]+$ ]] && (( COUNTER > 0)); then
-    while [[ $COUNTER -gt 0 ]]
-    do
-      UP="${UP}../"
-      COUNTER=$(( $COUNTER -1 ))
-    done
-    echo "cd $UP"
-    cd $UP
-    UP=''
-    return 0
-  else
-    echo 'Usage: up n'
-    return 1
-  fi
+    if [ -z $1 ]; then
+        cd ..
+        return 0
+    fi
+    COUNTER=$1
+    if [[ $COUNTER =~ ^[\-0-9]+$ ]] && (( COUNTER > 0)); then
+        while [[ $COUNTER -gt 0 ]]; do
+            UP="${UP}../"
+            COUNTER=$(( $COUNTER -1 ))
+        done
+        echo "cd $UP"
+        cd $UP
+        UP=''
+        return 0
+    else
+        echo 'Usage: up n'
+        return 1
+    fi
+}
+
+command_exists() {
+    command -v $@ >/dev/null 2>&1
 }
 
 sua() {
-    declare -A osInfo;
-    osInfo[/etc/redhat-release]="yum update -y; yum clean all"
-    osInfo[/etc/arch-release]="powerpill -Syu --noconfirm; pacman -Sc --noconfirm"
-    osInfo[/etc/gentoo-release]="emerge --sync; emerge --update --deep --with-bdeps=y @world"
-    osInfo[/etc/SuSE-release]="zypp refresh -y; zypp update -y; zypp packages --unneeded"
-    osInfo[/etc/debian_version]="apt update; apt upgrade -y; apt autoremove -y"
+    declare -A pkm;
+    pkm[yum]="yum update -y; yum clean all"
+    pkm[apt]="apt update; apt upgrade -y; apt autoremove -y"
+    pkm[powerpill]="powerpill -Syu --noconfirm; pacman -Sc --noconfirm"
+    pkm[pacman]="pacman -Syu --noconfirm; pacman -Sc --noconfirm"  # no staircase :'( powerpill must come before pacman
+    pkm[zypp]="zypp refresh -y; zypp update -y; zypp packages --unneeded"
+    pkm[emerge]="emerge --sync; emerge --update --deep --with-bdeps=y @world"
 
     # This is ZSH syntax for looping... Will not work with bash
-    for k v in ${(kv)osInfo[@]}; do
-        if [[ -f $k ]]; then
+    for k v in ${(kv)pkm[@]}; do
+        if command_exists $k; then
             echo Using command $v
             command=("${(@s/; /)v}")
             for x in ${command[@]}; do
@@ -166,23 +167,23 @@ sua() {
             return
         fi
     done
-   echo Update command not known. Set for sua\(\) in .aliases
+    echo Update command not known. Set for sua\(\) in .aliases
 }
 
 # alias hgt='(cd ~/.homedir_conf; git add .; git commit -m "alias update"; git push)'
 hps() {
-   if [ $# -ne 1 ] ; then
-      echo "usage: hgt <commit message>"
-      return
-   fi
-   cd ~/.homedir_conf
-   if [ -z "$(git status --untracked-files=no --porcelain)" ] ; then
-      echo "Home config clean, no changes."
-      return
-   fi
-   git add .
-   git commit -m "$1"
-   git push
-   cd -
-   echo "Home config changes pushed."
+    if [ $# -ne 1 ]; then
+        echo "usage: hgt <commit message>"
+        return
+    fi
+    cd ~/.homedir_conf
+    if [ -z "$(git status --untracked-files=no --porcelain)" ]; then
+        echo "Home config clean, no changes."
+        return
+    fi
+    git add .
+    git commit -m "$1"
+    git push
+    cd -
+    echo "Home config changes pushed."
 }

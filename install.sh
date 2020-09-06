@@ -50,24 +50,24 @@ command_exists() {
 }
 
 identify_package_manager() {
-    declare -A osInfo;
-    osInfo[emerge]="emerge -a"
-    osInfo[apt]="apt install -y"
-    osInfo[yum]="yum install -y"
-    osInfo[zypp]="zypp install -y"
-    osInfo[pacman]="pacman -S --noconfirm"
+    declare -A pkm;
+    pkm[emerge]="emerge -a"
+    pkm[apt]="apt install -y"
+    pkm[yum]="yum install -y"
+    pkm[zypp]="zypp install -y"
+    pkm[pacman]="pacman -S --noconfirm"
 
-    if ! [ -z $PACMAN ] ; then
+    if ! [ -z $PACMAN ]; then
         echo "PACMAN set in shell. Using => $PACMAN"
         return
     else
         echo Package manager not set... Trying to identify
     fi
     
-    for cmd in ${!osInfo[@]} ; do
+    for cmd in ${!pkm[@]}; do
         if command_exists $cmd; then
-            echo "Using => ${osInfo[$cmd]}"
-            PACMAN=${osInfo[$cmd]}
+            echo "Using => ${pkm[$cmd]}"
+            PACMAN=${pkm[$cmd]}
             echo Set manually if not correct
             return
         fi
@@ -98,7 +98,7 @@ install_package() {
 
 install_packages() {
     echo; echo Installing packages
-    for pkg in ${packages[@]} ; do
+    for pkg in ${packages[@]}; do
         echo -n "  * Trying $pkg..."
         if ! command_exists $pkg; then
             install_package $pkg
@@ -132,7 +132,7 @@ powerpill_arch_only() {
 
 check_configs_exist() {
     echo; echo Checking configs
-    for conf in ${configs[@]} ; do
+    for conf in ${configs[@]}; do
         echo -n "  * Trying $conf..."
         if [ -f $CONFIG/$conf ]; then
             echo Exists!
@@ -144,7 +144,7 @@ check_configs_exist() {
 
 link_configs() {
     echo; echo Linking configs
-    for conf in ${configs[@]} ; do
+    for conf in ${configs[@]}; do
         echo -n "  * Trying $conf..."
         if [ -f $CONFIG/$conf ]; then
             if [ -f ~/$conf ]; then
@@ -249,16 +249,16 @@ install_pwndbg() {
 }
 
 create_desktop_links() {
-    for file in $(ls $BIN_DIR) ; do
-        if ! [ -f /usr/bin/$file ] ; then
+    for file in $(ls $BIN_DIR); do
+        if ! [ -f /usr/bin/$file ]; then
             sudo cp $BIN_DIR/$file /usr/bin/$file && echo Creating /usr/bin/$file
         else
             echo File /usr/bin/$file exists
         fi
     done
 
-    for file in $(ls $DESKTOP_DIR) ; do
-        if ! [ -f /usr/share/applications/$file ] ; then
+    for file in $(ls $DESKTOP_DIR); do
+        if ! [ -f /usr/share/applications/$file ]; then
             sudo cp $DESKTOP_DIR/$file /usr/share/applications/$file && echo Creating /usr/share/applications/$file
         else
             echo File /usr/share/applications/$file exists
@@ -275,7 +275,7 @@ clone_repo_if_missing() {
 clean_up() {
     directory=$(cd `dirname $0` && pwd)
     file=$(basename $0)
-    if ! [ $directory = $ROOT ] ; then
+    if ! [ $directory = $ROOT ]; then
         echo Clearing script
         echo Script can be run from $ROOT/install.sh
         rm $directory/$file
