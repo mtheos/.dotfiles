@@ -114,8 +114,13 @@ powerpill_arch_only() {
     if [ ! -f /etc/arch-release ]; then
         echo "Powerpill is an AUR package"
         echo "Ignored as current OS is non-Arch (bad code if wrong)"
-        # return
+        return
+    else
+    	echo "Installing AUR dependencies + Powerpill"
     fi
+
+	# hacky
+	sudo pacman -S --noconfirm binutils base-devel
 
     wget $POWERPILL -O $POWERPILL_NAME
     tar -xf $POWERPILL_NAME
