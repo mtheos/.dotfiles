@@ -56,5 +56,5 @@ set tabstop=3
 set shiftwidth=3
 set expandtab
 color desert
-
+cnoremap sudow w !sudo tee % >/dev/null
 
