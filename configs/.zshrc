@@ -92,9 +92,10 @@ else
    echo "~/.bootscripts file not found"
 fi
 
-# Moved to bootscripts
-# umask 022
-# PATH=$PATH:~/.local/bin
+export HISTSIZE=100000
+export SAVEHIST=100000
+setopt HIST_IGNORE_DUPS
+setopt SHARE_HISTORY
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
