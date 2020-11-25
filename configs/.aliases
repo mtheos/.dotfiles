@@ -53,9 +53,6 @@ alias wgcc="gcc -m32 -no-pie -fno-stack-protector"  # to compile 6447 binaries
 # bof() see below
 # binfo() see below
 
-# Stops the dreaded __py_cache__ folder
-export PYTHONDONTWRITEBYTECODE=1
-
 # Git commands
 alias gpl='git pull'
 alias gps='git push'
@@ -65,6 +62,10 @@ alias gck='git checkout'
 alias ga='git add'
 alias gs='git status'
 alias gc='git commit -m'
+alias gd='git diff'
+
+# Stops the dreaded __py_cache__ folder
+export PYTHONDONTWRITEBYTECODE=1
 
 bof() {
     cyclic -l `cyclic 200 | strace ./$1 3>&1 1>&2 2>&3 3>&- | grep si_addr | sed -E 's/.*si_addr=(.*)}.*/\1/g'`
