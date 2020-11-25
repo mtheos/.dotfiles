@@ -1,8 +1,8 @@
 # alias name='command'
 alias hpl='(cd ~/.homedir_conf; git pull)'
 alias hst='(cd ~/.homedir_conf; git status)'
-# See function below
-# alias hps='(cd ~/.homedir_conf; git add .; git commit -m "alias update"; git push)'
+alias hig='(cd ~/.homedir_conf; tig)'
+# hps() See below
 alias ea='subl ~/.aliases &'                                              # Open alias file
 alias sa='source ~/.aliases && echo "Aliases sourced  --ok."'             # Source alias file
 alias ep='subl ~/.bash_prompt &'                                          # Open promp file
@@ -14,8 +14,7 @@ alias te='konsole . &'                                                    # Open
 alias runscripts='~/.manualscripts'                                       # run .term_manualscripts
 
 alias sudo='sudo '
-# See function below
-# alias sua='sudo apt update; sudo apt upgrade -y'
+# sua() see below
 alias applications='cd /usr/share/applications && ls'
 alias explore='nautilus . &'
 alias exp='nautilus . &'
