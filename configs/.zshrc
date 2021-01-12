@@ -92,6 +92,7 @@ else
    echo "~/.bootscripts file not found"
 fi
 
+export GPG_TTY=$(tty)
 export HISTSIZE=100000
 export SAVEHIST=100000
 setopt HIST_IGNORE_DUPS

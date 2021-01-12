@@ -62,6 +62,7 @@ alias gckm='git checkout master'
 alias ga='git add'
 alias gs='git status'
 alias gc='git commit -m'
+alias gcs='git commit -S -m'
 alias gd='git diff'
 
 # Stops the dreaded __py_cache__ folder
