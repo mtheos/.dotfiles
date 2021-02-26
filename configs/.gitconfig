@@ -1,19 +1,23 @@
 [core]
-	autocrlf = input
-	eol = lf
+    autocrlf = input
+    eol = lf
 [user]
-	name = Michael Theos
-	email = michael@theos.me
-	signingkey = 0628CC3897421E40
+    name = Michael Theos
+    email = michael@theos.me
+    signingkey = 0628CC3897421E40
 [color]
-	ui = auto
+    ui = auto
 [alias]
-	supdate = submodule update --remote --merge
+    supdate = submodule update --remote --merge
 [pull]
-   rebase = true
-
+    rebase = true
 [filter "lfs"]
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+[commit]
+    gpgsign = true
+[protocol]
+    version = 2
+

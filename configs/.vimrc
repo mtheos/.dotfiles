@@ -52,8 +52,8 @@ filetype plugin indent on    " required
 autocmd! BufNewFile,BufRead *.vs,*.fs,*.glsl set ft=glsl
 set number relativenumber
 set printoptions=number:y
-set tabstop=3
-set shiftwidth=3
+set tabstop=4
+set shiftwidth=4
 set expandtab
 color desert
 cnoremap sudow w !sudo tee % >/dev/null

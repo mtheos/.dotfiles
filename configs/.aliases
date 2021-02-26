@@ -10,7 +10,6 @@ alias sp='source ~/.bash_prompt && echo "Prompt sourced  --ok."'          # Sour
 alias es='subl ~/.autoscripts &'                                          # Open autoscripts file
 alias ss='source ~/.autoscripts && echo "Scripts sourced  --ok."'         # Source autoscripts file
 alias eh='subl ~/.zsh_history &'                                          # Open autoscripts file
-alias te='konsole . &'                                                    # Open a new console
 alias runscripts='~/.manualscripts'                                       # run .term_manualscripts
 
 alias sudo='sudo '
@@ -55,6 +54,8 @@ alias wgcc="gcc -m32 -no-pie -fno-stack-protector"  # to compile 6447 binaries
 # Git commands
 alias gpl='git pull'
 alias gps='git push'
+alias gpsu='git push -u origin $(git branch --show-current)'
+alias gpsf='git push --force-with-lease'
 alias gfc='git fetch'
 alias gfcpl='gfc; gpl'
 alias gck='git checkout'
@@ -113,7 +114,7 @@ pregister() {
 }
 
 picon() {
-  if [ -z $1 ]; then # empty string
+    if [ -z $1 ]; then # empty string
         echo Enter a file name
     else
         echo
@@ -122,8 +123,10 @@ picon() {
     sudo nautilus /usr/share/applications &
 }
 
-up() {    # move up by any number of directories
+# move up by any number of directories
+up() {
     if [ -z $1 ]; then
+        echo "cd .."
         cd ..
         return 0
     fi
@@ -138,7 +141,7 @@ up() {    # move up by any number of directories
         UP=''
         return 0
     else
-        echo 'Usage: up n'
+        echo 'Usage: up <n>'
         return 1
     fi
 }
@@ -171,13 +174,19 @@ sua() {
     echo Update command not known. Set for sua\(\) in .aliases
 }
 
-# alias hgt='(cd ~/.homedir_conf; git add .; git commit -m "alias update"; git push)'
-hps() {
-    if [ $# -ne 1 ]; then
-        echo "usage: hgt <commit message>"
+# alias hps='(cd ~/.homedir_conf; git add .; git commit -m "alias update"; git push)'
+hps() (
+    cd ~/.homedir_conf
+    if [ $# -eq 0 ]; then
+        git push
         return
     fi
-    cd ~/.homedir_conf
+    if [ $# -ne 1 ]; then
+        echo "usage:
+        hps
+        hps <commit message>"
+        return
+    fi
     if [ -z "$(git status --untracked-files=no --porcelain)" ]; then
         echo "Home config clean, no changes."
         return
@@ -185,6 +194,6 @@ hps() {
     git add .
     git commit -m "$1"
     git push
-    cd -
     echo "Home config changes pushed."
-}
+)
+
