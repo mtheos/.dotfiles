@@ -65,6 +65,7 @@ alias gs='git status'
 alias gc='git commit -m'
 alias gcs='git commit -S -m'
 alias gd='git diff'
+alias gdn='git diff --name-only'
 
 # Stops the dreaded __py_cache__ folder
 export PYTHONDONTWRITEBYTECODE=1
