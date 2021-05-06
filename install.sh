@@ -16,8 +16,10 @@ ZSH_CUSTOM=$ZSH_DIR/custom
 BIN_DIR=$ROOT/desktop_entries/bin
 DESKTOP_DIR=$ROOT/desktop_entries/desktop
 
-ZSH_THEME_FROM=$ROOT/zsh_themes/muse_mod.zsh-theme
-ZSH_THEME_TO=$ZSH_CUSTOM/themes/muse_mod.zsh-theme
+ZSH_THEME_MUSE_FROM=$ROOT/zsh_themes/muse_mod.zsh-theme
+ZSH_THEME_MUSE_TO=$ZSH_CUSTOM/themes/muse_mod.zsh-theme
+ZSH_THEME_POWERLEVEL_FROM=$ROOT/zsh_themes/powerlevel10k/powerlevel10k.zsh-theme
+ZSH_THEME_POWERLEVEL_TO=$ZSH_CUSTOM/themes/powerlevel10k.zsh-theme
 
 # Repo path locations
 # OHMYZSH_LOC=~/.oh-my-zsh
@@ -214,7 +216,8 @@ install_zsh_syntax_highlighting() {
 }
 
 install_zsh_theme() {
-    ln -s $ZSH_THEME_FROM $ZSH_THEME_TO
+    ln -s $ZSH_THEME_MUSE_FROM $ZSH_THEME_MUSE_TO
+    ln -s $ZSH_THEME_POWERLEVEL_FROM $ZSH_THEME_POWERLEVEL_TO
 }
 
 install_vundle() {

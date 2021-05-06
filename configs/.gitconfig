@@ -8,7 +8,8 @@
 [color]
     ui = auto
 [alias]
-    supdate = submodule update --remote --merge
+    supdate = submodule update --remote --rebase
+    sinit = submodule update --init --recursive
 [pull]
     rebase = true
 [filter "lfs"]
@@ -17,7 +18,7 @@
     clean = git-lfs clean -- %f
     smudge = git-lfs smudge -- %f
 [commit]
-    gpgsign = true
+	gpgsign = false
 [protocol]
     version = 2
 
