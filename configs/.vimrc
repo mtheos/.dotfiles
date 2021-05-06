@@ -33,6 +33,12 @@ Plugin 'tikhomirov/vim-glsl'
 " Function names and arguments
 Plugin 'dense-analysis/ale'
 
+" Typescript Syntax Highlighting
+Plugin 'leafgarland/typescript-vim'
+
+" Kotlin Syntax Highlighting
+Plugin 'udalov/kotlin-vim'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -52,9 +58,10 @@ filetype plugin indent on    " required
 autocmd! BufNewFile,BufRead *.vs,*.fs,*.glsl set ft=glsl
 set number relativenumber
 set printoptions=number:y
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set expandtab
+syntax on
 color desert
 cnoremap sudow w !sudo tee % >/dev/null
 
