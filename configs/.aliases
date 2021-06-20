@@ -154,9 +154,10 @@ command_exists() {
 sua() {
     declare -A pkm;
     pkm[yum]="yum update -y; yum clean all"
+    pkm[aptitude]="aptitude update; aptitude upgrade -y" # aptitude must come before apt
     pkm[apt]="apt update; apt upgrade -y; apt autoremove -y"
     pkm[powerpill]="powerpill -Syu --noconfirm; pacman -Sc --noconfirm"
-    pkm[pacman]="pacman -Syu --noconfirm; pacman -Sc --noconfirm"  # no staircase :'( powerpill must come before pacman
+    pkm[pacman]="pacman -Syu --noconfirm; pacman -Sc --noconfirm"  # powerpill must come before pacman
     pkm[zypp]="zypp refresh -y; zypp update -y; zypp packages --unneeded"
     pkm[emerge]="emerge --sync; emerge --update --deep --with-bdeps=y @world"
 
