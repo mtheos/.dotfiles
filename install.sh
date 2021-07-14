@@ -4,7 +4,7 @@
 umask 022
 
 # Variables
-declare -a packages=(git guake vim curl wget zsh)
+declare -a packages=(git guake vim curl wget aptitude zsh)
 declare -a configs=( .bash_prompt .gdbinit .gitconfig .aliases .bootscripts .manualscripts .vimrc .zshrc )
 GUAKE_PREFERENCES=guake.dconf
 HOME_DIR_REPO=https://github.com/mtheos/.homedir_conf.git
