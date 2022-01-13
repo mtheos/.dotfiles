@@ -25,6 +25,7 @@ ZSH_THEME_POWERLEVEL_TO=$ZSH_CUSTOM/themes/powerlevel10k.zsh-theme
 # OHMYZSH_LOC=~/.oh-my-zsh
 ZSH_AUTO_COMPLETE_LOC=$ZSH_CUSTOM/plugins/zsh-autosuggestions
 ZSH_SYNTAX_HIGHLIGHTING_LOC=$ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+ZSH_VIM_MODE_LOC=$ZSH_CUSTOM/plugins/zsh-vi-mode
 VUNDLE_LOC=~/.vim/bundle/Vundle.vim
 PWNDBG_LOC=~/.local/lib/pwndbg
 
@@ -32,6 +33,7 @@ PWNDBG_LOC=~/.local/lib/pwndbg
 # OHMYZSH=https://github.com/ohmyzsh/ohmyzsh.git
 ZSH_AUTO_COMPLETE=https://github.com/zsh-users/zsh-autosuggestions.git
 ZSH_SYNTAX_HIGHLIGHTING=https://github.com/zsh-users/zsh-syntax-highlighting.git
+ZSH_VIM_MODE=https://github.com/jeffreytse/zsh-vi-mode.git
 VUNDLE=https://github.com/VundleVim/Vundle.vim.git
 PWNDBG=https://github.com/pwndbg/pwndbg
 
@@ -193,6 +195,7 @@ install_ohmyzsh() {
 install_zsh_addons() {
     install_zsh_auto_complete
     install_zsh_syntax_highlighting
+    install_zsh_vim_mode
 }
 
 install_zsh_auto_complete() {
@@ -212,6 +215,16 @@ install_zsh_syntax_highlighting() {
         git clone $ZSH_SYNTAX_HIGHLIGHTING $ZSH_SYNTAX_HIGHLIGHTING_LOC
     else
         echo ZSH Syntax Highlighting exists, skipping installation
+    fi
+}
+
+install_zsh_vim_mode() {
+    if ! [ -d $ZSH_VIM_MODE_LOC ]; then
+        echo Installing ZSH Vim Mode
+        mkdir -p $ZSH_VIM_MODE_LOC
+        git clone $ZSH_VIM_MODE $ZSH_VIM_MODE_LOC
+    else
+        echo ZSH vim mode exists, skipping installation
     fi
 }
 
