@@ -9,6 +9,9 @@ PATH="$HOME/.local/bin:$PATH"
 PATH="$HOME/.local/lib/go/bin:$PATH"
 PATH="$HOME/.cargo/bin:$PATH"
 
+export VISUAL=vim
+export EDITOR=$VISUAL
+
 SSH_ENV="$HOME/.ssh/agent-environment"
 
 function start_agent {
