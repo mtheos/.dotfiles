@@ -3,13 +3,13 @@ alias hpl='(cd ~/.homedir_conf; git pull)'
 alias hst='(cd ~/.homedir_conf; git status)'
 alias hig='(cd ~/.homedir_conf; tig)'
 # hps() See below
-alias ea='subl ~/.aliases &'                                              # Open alias file
+alias ea='vim ~/.aliases'                                                 # Open alias file
 alias sa='source ~/.aliases && echo "Aliases sourced  --ok."'             # Source alias file
 alias ep='subl ~/.bash_prompt &'                                          # Open promp file
 alias sp='source ~/.bash_prompt && echo "Prompt sourced  --ok."'          # Source prompt file
 alias es='subl ~/.autoscripts &'                                          # Open autoscripts file
 alias ss='source ~/.autoscripts && echo "Scripts sourced  --ok."'         # Source autoscripts file
-alias eh='subl ~/.zsh_history &'                                          # Open autoscripts file
+alias eh='vim + ~/.zsh_history'                                           # Open history file
 alias runscripts='~/.manualscripts'                                       # run .term_manualscripts
 
 alias sudo='sudo '
