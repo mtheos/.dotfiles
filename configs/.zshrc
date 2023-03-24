@@ -1,3 +1,10 @@
+# Run Bootscripts (set path etc)
+if [[ -f ~/.bootscripts ]]; then
+   source ~/.bootscripts
+else
+   echo "~/.bootscripts file not found"
+fi
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -57,13 +64,6 @@ if [[ -f ~/.aliases ]]; then
    source ~/.aliases
 else
    echo "~/.aliases file not found"
-fi
-
-# Run Bootscripts (set path etc)
-if [[ -f ~/.bootscripts ]]; then
-   source ~/.bootscripts
-else
-   echo "~/.bootscripts file not found"
 fi
 
 export GPG_TTY=$(tty)  # needed for gpg key signing
