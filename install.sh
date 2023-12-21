@@ -7,8 +7,8 @@ umask 022
 declare -a packages=(git guake vim curl wget aptitude zsh)
 declare -a configs=( .bash_prompt .gdbinit .gitconfig .aliases .bootscripts .manualscripts .vimrc .zshrc )
 GUAKE_PREFERENCES=guake.dconf
-HOME_DIR_REPO=https://github.com/mtheos/.homedir_conf.git
-ROOT=~/.homedir_conf
+HOME_DIR_REPO=https://github.com/mtheos/.dotfiles.git
+ROOT=~/.dotfiles
 CONFIG=$ROOT/configs
 TMP=$ROOT/tmp
 ZSH_DIR=~/.oh-my-zsh

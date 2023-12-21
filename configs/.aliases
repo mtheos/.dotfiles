@@ -1,7 +1,7 @@
 # alias name='command'
-alias hpl='(cd ~/.homedir_conf; git pull)'
-alias hst='(cd ~/.homedir_conf; git status)'
-alias hig='(cd ~/.homedir_conf; tig)'
+alias hpl='(cd ~/.dotfiles; git pull)'
+alias hst='(cd ~/.dotfiles; git status)'
+alias hig='(cd ~/.dotfiles; tig)'
 # hps() See below
 alias ea='vim ~/.aliases'                                                 # Open alias file
 alias sa='source ~/.aliases && echo "Aliases sourced  --ok."'             # Source alias file
@@ -176,9 +176,9 @@ sua() {
     echo Update command not known. Set for sua\(\) in .aliases
 }
 
-# alias hps='(cd ~/.homedir_conf; git add .; git commit -m "alias update"; git push)'
+# alias hps='(cd ~/.dotfiles; git add .; git commit -m "alias update"; git push)'
 hps() (
-    cd ~/.homedir_conf
+    cd ~/.dotfiles
     if [ $# -eq 0 ]; then
         git push
         return
