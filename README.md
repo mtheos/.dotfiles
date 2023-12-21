@@ -1,10 +1,10 @@
-# homedir_conf
+# .dotfiles
 Home directory config
 
-Download install.sh from https://raw.githubusercontent.com/mtheos/.homedir_conf/master/install.sh and run to install.
+Download install.sh from https://raw.githubusercontent.com/mtheos/.dotfiles/master/install.sh and run to install.
 Install with `bash ./install.sh` and grant sudo if asked
 
-Will symlink from ~/.xxx to ~/.homedir_conf/configs/.xxx so updates to the files are synced
+Will symlink from ~/.xxx to ~/.dotfiles/configs/.xxx so updates to the files are synced
 
 TODO:
  - Make sua (update all) alias system independent
