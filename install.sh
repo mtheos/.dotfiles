@@ -1,13 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #set umask
 umask 022
 
 # Variables
-declare -a packages=(git guake vim curl wget aptitude zsh)
-declare -a configs=(.bash_prompt .gdbinit .gitconfig .aliases .bootscripts .manualscripts .vimrc .zshrc)
+declare -a PACKAGES=(git guake vim curl wget zsh)
+declare -a CONFIGS=(.gdbinit .gitconfig .aliases .bootscripts .manualscripts .vimrc .zshrc)
 GUAKE_PREFERENCES=guake.dconf
-HOME_DIR_REPO=https://github.com/mtheos/.dotfiles.git
+DOTFILES_REPO=https://github.com/mtheos/.dotfiles-mac.git
 ROOT=~/.dotfiles
 CONFIG=$ROOT/configs
 TMP=$ROOT/tmp
@@ -22,24 +22,19 @@ ZSH_THEME_POWERLEVEL_FROM=$ROOT/zsh_themes/powerlevel10k/powerlevel10k.zsh-theme
 ZSH_THEME_POWERLEVEL_TO=$ZSH_CUSTOM/themes/powerlevel10k.zsh-theme
 
 # Repo path locations
-# OHMYZSH_LOC=~/.oh-my-zsh
-ZSH_AUTO_COMPLETE_LOC=$ZSH_CUSTOM/plugins/zsh-autosuggestions
-ZSH_SYNTAX_HIGHLIGHTING_LOC=$ZSH_CUSTOM/plugins/zsh-syntax-highlighting
-ZSH_VIM_MODE_LOC=$ZSH_CUSTOM/plugins/zsh-vi-mode
 VUNDLE_LOC=~/.vim/bundle/Vundle.vim
 PWNDBG_LOC=~/.local/lib/pwndbg
 
 # Repo github URLs
-# OHMYZSH=https://github.com/ohmyzsh/ohmyzsh.git
-ZSH_AUTO_COMPLETE=https://github.com/zsh-users/zsh-autosuggestions.git
-ZSH_SYNTAX_HIGHLIGHTING=https://github.com/zsh-users/zsh-syntax-highlighting.git
-ZSH_VIM_MODE=https://github.com/jeffreytse/zsh-vi-mode.git
+OH_MY_ZSH=https://github.com/ohmyzsh/ohmyzsh.git
+declare -a ZSH_PLUGINS=(
+  https://github.com/marlonrichert/zsh-autocomplete.git
+  https://github.com/zsh-users/zsh-autosuggestions.git
+  https://github.com/zsh-users/zsh-syntax-highlighting.git
+  https://github.com/jeffreytse/zsh-vi-mode.git
+)
 VUNDLE=https://github.com/VundleVim/Vundle.vim.git
 PWNDBG=https://github.com/pwndbg/pwndbg
-
-# Scripts
-OHMYZSH=https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-OHMYZSH_FILE=ohmyzsh.sh
 
 # Powerpill AUR package
 POWERPILL=https://xyne.archlinux.ca/projects/powerpill/pkgbuild.tar.gz
@@ -59,6 +54,7 @@ identify_package_manager() {
   pkm[yum]="yum install -y"
   pkm[zypp]="zypp install -y"
   pkm[pacman]="pacman -S --noconfirm"
+  pkm[brew]="brew install"
 
   if ! [ -z $PACMAN ]; then
     echo "PACMAN set in shell. Using => $PACMAN"
@@ -68,6 +64,7 @@ identify_package_manager() {
   fi
 
   for cmd in ${!pkm[@]}; do
+    echo checking $cmd
     if command_exists $cmd; then
       echo "Using => ${pkm[$cmd]}"
       PACMAN=${pkm[$cmd]}
@@ -88,7 +85,7 @@ update_package_definitions() {
     shift
   done
   if ! [ -z $UPDATE ]; then
-    echo Updating pacakge definitions...
+    echo Updating package definitions...
     sudo apt update
   else
     echo Running without updating, use --update to change this behaviour
@@ -102,7 +99,7 @@ install_package() {
 install_packages() {
   echo
   echo Installing packages
-  for pkg in ${packages[@]}; do
+  for pkg in ${PACKAGES[@]}; do
     echo -n "  * Trying $pkg..."
     if ! command_exists $pkg; then
       install_package $pkg
@@ -142,7 +139,7 @@ powerpill_arch_only() {
 check_configs_exist() {
   echo
   echo Checking configs
-  for conf in ${configs[@]}; do
+  for conf in ${CONFIGS[@]}; do
     echo -n "  * Trying $conf..."
     if [ -f $CONFIG/$conf ]; then
       echo Exists!
@@ -155,7 +152,7 @@ check_configs_exist() {
 link_configs() {
   echo
   echo Linking configs
-  for conf in ${configs[@]}; do
+  for conf in ${CONFIGS[@]}; do
     echo -n "  * Trying $conf..."
     if [ -f $CONFIG/$conf ]; then
       if [ -f ~/$conf ]; then
@@ -184,55 +181,58 @@ guake_preferences() {
 }
 
 # run oh-my-zsh install script
+# install_ohmyzsh() {
+#   # Scripts
+#   OHMYZSH=https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+#   OHMYZSH_FILE=ohmyzsh.sh
+#   if ! [ -d $ZSH_DIR ]; then
+#     echo Installing oh-my-zsh
+#     wget $OHMYZSH -O $ROOT/$OHMYZSH_FILE
+#     export RUNZSH=no
+#     sh $ROOT/$OHMYZSH_FILE
+#     rm $ROOT/$OHMYZSH_FILE
+#   else
+#     echo .oh-my-zsh exists, skipping installation
+#   fi
+# }
+
 install_ohmyzsh() {
   if ! [ -d $ZSH_DIR ]; then
-    echo Installing oh-my-zsh
-    wget $OHMYZSH -O $ROOT/$OHMYZSH_FILE
-    export RUNZSH=no
-    sh $ROOT/$OHMYZSH_FILE
-    rm $ROOT/$OHMYZSH_FILE
+    echo Cloning oh-my-zsh
+    git clone $OH_MY_ZSH $ZSH_DIR
   else
-    echo .oh-my-zsh exists, skipping installation
+    echo oh-my-zsh exists, skipping installation
   fi
 }
 
-install_zsh_addons() {
-  install_zsh_auto_complete
-  install_zsh_syntax_highlighting
-  install_zsh_vim_mode
+dir_name_from_git_url() {
+  local url="$1"
+  local name=$(basename "$url")
+  name="${name%.*}"
+  echo "$name"
 }
 
-install_zsh_auto_complete() {
-  if ! [ -d $ZSH_AUTO_COMPLETE_LOC ]; then
-    echo Installing ZSH Auto Complete
-    mkdir -p $ZSH_AUTO_COMPLETE_LOC
-    git clone $ZSH_AUTO_COMPLETE $ZSH_AUTO_COMPLETE_LOC
+install_zsh_plugins() {
+  for plugin in ${ZSH_PLUGINS[@]}; do
+    install_zsh_plugin $ZSH_CUSTOM/plugins $plugin
+  done
+}
+
+install_zsh_plugin() {
+  local plugin_dir=$1
+  local url=$2
+  local plugin=$(dir_name_from_git_url $url)
+  local dst="${plugin_dir}/${plugin}"
+  if ! [ -d $dst ]; then
+    echo Installing $plugin
+    mkdir -p $dst
+    git clone $url $dst
   else
-    echo ZSH Auto Complete exists, skipping installation
+    echo $plugin exists, skipping installation
   fi
 }
 
-install_zsh_syntax_highlighting() {
-  if ! [ -d $ZSH_SYNTAX_HIGHLIGHTING_LOC ]; then
-    echo Installing ZSH Syntax Highlighting
-    mkdir -p $ZSH_SYNTAX_HIGHLIGHTING_LOC
-    git clone $ZSH_SYNTAX_HIGHLIGHTING $ZSH_SYNTAX_HIGHLIGHTING_LOC
-  else
-    echo ZSH Syntax Highlighting exists, skipping installation
-  fi
-}
-
-install_zsh_vim_mode() {
-  if ! [ -d $ZSH_VIM_MODE_LOC ]; then
-    echo Installing ZSH Vim Mode
-    mkdir -p $ZSH_VIM_MODE_LOC
-    git clone $ZSH_VIM_MODE $ZSH_VIM_MODE_LOC
-  else
-    echo ZSH vim mode exists, skipping installation
-  fi
-}
-
-install_zsh_thems() {
+install_zsh_themes() {
   install_zsh_theme $ZSH_THEME_MUSE_FROM $ZSH_THEME_MUSE_TO
   install_zsh_theme $ZSH_THEME_POWERLEVEL_FROM $ZSH_THEME_POWERLEVEL_TO
 }
@@ -292,7 +292,7 @@ create_desktop_links() {
 
 clone_repo_if_missing() {
   if ! [ -d $ROOT ]; then
-    git clone $HOME_DIR_REPO $ROOT
+    git clone $DOTFILES_REPO $ROOT
   fi
 }
 
@@ -327,8 +327,8 @@ main() {
   init_submodules
   # Install oh-my-zsh
   install_ohmyzsh
-  # Install oh-my-zsh addons
-  install_zsh_addons
+  # Install oh-my-zsh plugins
+  install_zsh_plugins
   # Install oh-my-zsh theme(s)
   install_zsh_themes
   # Install Vundle
