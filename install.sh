@@ -5,7 +5,7 @@ umask 022
 
 # Variables
 declare -a PACKAGES=(git guake vim curl wget zsh)
-declare -a CONFIGS=(.gdbinit .gitconfig .aliases .bootscripts .manualscripts .vimrc .zshrc)
+declare -a CONFIGS=(.gdbinit .gitconfig .aliases .bootscripts .manualscripts .vimrc .zshrc .p10k.zsh)
 GUAKE_PREFERENCES=guake.dconf
 DOTFILES_REPO=https://github.com/mtheos/.dotfiles-mac.git
 ROOT=~/.dotfiles
