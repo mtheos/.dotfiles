@@ -56,11 +56,11 @@ identify_package_manager() {
   pkm[pacman]="pacman -S --noconfirm"
   pkm[brew]="brew install"
 
-  if ! [ -z $PACMAN ]; then
+  if [ -z $PACMAN ]; then
+    echo Package manager not set... Trying to identify
+  else
     echo "PACMAN set in shell. Using => $PACMAN"
     return
-  else
-    echo Package manager not set... Trying to identify
   fi
 
   for cmd in ${!pkm[@]}; do
@@ -84,11 +84,11 @@ update_package_definitions() {
     esac
     shift
   done
-  if ! [ -z $UPDATE ]; then
+  if [ -z $UPDATE ]; then
+    echo Running without updating, use --update to change this behaviour
+  else
     echo Updating package definitions...
     sudo apt update
-  else
-    echo Running without updating, use --update to change this behaviour
   fi
 }
 
@@ -101,11 +101,11 @@ install_packages() {
   echo Installing packages
   for pkg in ${PACKAGES[@]}; do
     echo -n "  * Trying $pkg..."
-    if ! command_exists $pkg; then
+    if command_exists $pkg; then
+      echo "${pkg} already installed :)"
+    else
       install_package $pkg
       echo Done!
-    else
-      echo "Already installed :)"
     fi
   done
 }
@@ -180,28 +180,12 @@ guake_preferences() {
   fi
 }
 
-# run oh-my-zsh install script
-# install_ohmyzsh() {
-#   # Scripts
-#   OHMYZSH=https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-#   OHMYZSH_FILE=ohmyzsh.sh
-#   if ! [ -d $ZSH_DIR ]; then
-#     echo Installing oh-my-zsh
-#     wget $OHMYZSH -O $ROOT/$OHMYZSH_FILE
-#     export RUNZSH=no
-#     sh $ROOT/$OHMYZSH_FILE
-#     rm $ROOT/$OHMYZSH_FILE
-#   else
-#     echo .oh-my-zsh exists, skipping installation
-#   fi
-# }
-
 install_ohmyzsh() {
-  if ! [ -d $ZSH_DIR ]; then
+  if [ -d $ZSH_DIR ]; then
+    echo oh-my-zsh exists, skipping installation
+  else
     echo Cloning oh-my-zsh
     git clone $OH_MY_ZSH $ZSH_DIR
-  else
-    echo oh-my-zsh exists, skipping installation
   fi
 }
 
@@ -223,13 +207,13 @@ install_zsh_plugin() {
   local url=$2
   local plugin=$(dir_name_from_git_url $url)
   local dst="${plugin_dir}/${plugin}"
-  if ! [ -d $dst ]; then
-    echo Installing $plugin
-    mkdir -p $dst
-    git clone $url $dst
-  else
+  if [ -d $dst ]; then
     echo $plugin exists, skipping installation
+    return
   fi
+  echo Installing $plugin
+  mkdir -p $dst
+  git clone $url $dst
 }
 
 install_zsh_themes() {
@@ -240,52 +224,52 @@ install_zsh_themes() {
 install_zsh_theme() {
   local from=$1
   local to=$2
-  if ! [ -f $to ]; then
-    echo Installing $to
-    ln -s $from $to
-  else
+  if [ -f $to ]; then
     echo $(basename $to) exists, skipping installation
+    return
   fi
+  echo Installing $to
+  ln -s $from $to
 }
 
 install_vundle() {
-  if ! [ -d $VUNDLE_LOC ]; then
-    echo Installing Vundle
-    mkdir -p $VUNDLE_LOC
-    git clone $VUNDLE $VUNDLE_LOC
-  else
+  if [ -d $VUNDLE_LOC ]; then
     echo Vundle exists, skipping installation
+    return
   fi
+  echo Installing Vundle
+  mkdir -p $VUNDLE_LOC
+  git clone $VUNDLE $VUNDLE_LOC
 }
 
 install_pwndbg() {
-  if ! [ -d $PWNDBG_LOC ]; then
-    echo Installing pwndbg
-    mkdir -p $PWNDBG_LOC
-    git clone $PWNDBG $PWNDBG_LOC
-    sh -c $(
-      cd $PWNDBG_LOC
-      ./setup.sh
-    )
-  else
+  if [ -d $PWNDBG_LOC ]; then
     echo Pwndbg exists, skipping installation
+    return
   fi
+  echo Installing pwndbg
+  mkdir -p $PWNDBG_LOC
+  git clone $PWNDBG $PWNDBG_LOC
+  sh -c $(
+    cd $PWNDBG_LOC
+    ./setup.sh
+  )
 }
 
 create_desktop_links() {
   for file in $(ls $BIN_DIR); do
-    if ! [ -f /usr/bin/$file ]; then
-      sudo cp $BIN_DIR/$file /usr/bin/$file && echo Creating /usr/bin/$file
-    else
+    if [ -f /usr/bin/$file ]; then
       echo File /usr/bin/$file exists
+    else
+      sudo cp $BIN_DIR/$file /usr/bin/$file && echo Creating /usr/bin/$file
     fi
   done
 
   for file in $(ls $DESKTOP_DIR); do
-    if ! [ -f /usr/share/applications/$file ]; then
-      sudo cp $DESKTOP_DIR/$file /usr/share/applications/$file && echo Creating /usr/share/applications/$file
-    else
+    if [ -f /usr/share/applications/$file ]; then
       echo File /usr/share/applications/$file exists
+    else
+      sudo cp $DESKTOP_DIR/$file /usr/share/applications/$file && echo Creating /usr/share/applications/$file
     fi
   done
 }
@@ -302,6 +286,56 @@ init_submodules() {
   git submodule init
   git submodule update
   cd $cwd
+}
+
+install_docker() {
+  echo
+  echo Installing docker
+  if command_exists docker; then
+    echo "Docker already installed :)"
+    return
+  fi
+  install_docker_apt
+  install_docker_cli
+  echo "Docker installed"
+}
+
+install_docker_apt() {
+  echo
+  if ! command_exists apt; then
+    echo "can't find apt, this probably isn't a Debian OS."
+    echo "Docker installation will continue, but may fail if docker signing keys need to be manually added."
+    return
+  fi
+
+  echo Adding docker to apt sources
+  if grep -r "download.docker.com" /etc/apt/sources.list /etc/apt/sources.list.d/ > /dev/null; then
+    echo "Docker repo exists in apt sources"
+  fi
+  echo "Adding docker repo to apt sources"
+  # Add Docker's official GPG key:
+  sudo apt update
+  sudo apt install ca-certificates curl
+  sudo install -m 0755 -d /etc/apt/keyrings
+  sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+  sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+  # Add the repository to apt sources:
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  # refresh apt
+  sudo apt update
+}
+
+install_docker_cli() {
+  echo
+  echo Installing docker
+  if command_exists docker; then
+    echo "Already installed :)"
+  fi
+  install_package install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 }
 
 clean_up() {
@@ -334,7 +368,7 @@ main() {
   # Install Vundle
   install_vundle
   # Install pwndbg
-  install_pwndbg
+  # install_pwndbg # skip pwndbg install
   create_desktop_links
   # Notify if any config files don't exist
   check_configs_exist
@@ -342,6 +376,7 @@ main() {
   link_configs
   guake_preferences
   powerpill_arch_only
+  install_docker
   # Delete script if not in home_conf dir
   clean_up
   # Drop into the ZSH shell... Don't exec so we can jump back if necessary
