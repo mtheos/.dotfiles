@@ -311,6 +311,7 @@ install_docker_apt() {
   echo Adding docker to apt sources
   if grep -r "download.docker.com" /etc/apt/sources.list /etc/apt/sources.list.d/ > /dev/null; then
     echo "Docker repo exists in apt sources"
+    return
   fi
   echo "Adding docker repo to apt sources"
   # Add Docker's official GPG key:
