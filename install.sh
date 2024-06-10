@@ -335,7 +335,7 @@ install_docker_cli() {
   if command_exists docker; then
     echo "Already installed :)"
   fi
-  install_package install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  install_package docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 }
 
 clean_up() {
