@@ -1,24 +1,68 @@
-[core]
-    autocrlf = input
-    eol = lf
-[user]
-    name = Michael Theos
-    email = michael@theos.me
-    signingkey = 0628CC3897421E40
-[color]
-    ui = auto
-[alias]
-    supdate = submodule update --remote --rebase
-    sinit = submodule update --init --recursive
-[pull]
-    rebase = true
-[filter "lfs"]
-    process = git-lfs filter-process
-    required = true
-    clean = git-lfs clean -- %f
-    smudge = git-lfs smudge -- %f
-[commit]
-#    gpgsign = true
 [protocol]
-    version = 2
-
+  version = 2
+[core]
+  autocrlf = input
+  eol = lf
+  excludesFile = ~/.gitignore
+  pager = diff-so-fancy | less --tabs=4 -RF
+[user]
+  name = Michael Theos
+  email = michael@theos.me
+  signingkey = 0628CC3897421E40
+[color]
+  ui = auto
+[column]
+  ui = auto
+[branch]
+  sort = -committerdate
+[tag]
+  sort = version:refname
+[init]
+  defaultBranch = main
+[alias]
+  supdate = submodule update --remote --rebase
+  sinit = submodule update --init --recursive
+  alias = ! git config --get-regexp ^alias\\. | sed -e s/^alias\\.// -e s/\\ /\\ =\\ /
+[diff]
+  # algorithm = histogram
+  # colorMoved = plain
+  mnemonicPrefix = true
+  renames = true
+  external = difft
+[push]
+  default = simple
+  autoSetupRemote = true
+  followTags = true
+[pull]
+  rebase = true
+[fetch]
+  prune = true
+  pruneTags = true
+  all = true
+[filter "lfs"]
+  process = git-lfs filter-process
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+[help]
+  autocorrect = prompt
+[commit]
+  verbose = true
+  gpgsign = true
+[rerere]
+  enabled = true
+  autoupdate = true
+[rebase]
+  autoSquash = true
+  autoStash = true
+  updateRefs = true
+[merge]
+  onflictstyle = zdiff3
+[trace2]
+	eventTarget = af_unix:dgram:/tmp/olly-git-trace2.sock
+[interactive]
+  diffFilter = diff-so-fancy --patch
+[credential]
+	helper = /usr/local/share/gcm-core/git-credential-manager
+[credential "https://dev.azure.com"]
+  useHttpPath = true

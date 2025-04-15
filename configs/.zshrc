@@ -1,10 +1,3 @@
-# Run Bootscripts (set path etc)
-if [[ -f ~/.bootscripts ]]; then
-   source ~/.bootscripts
-else
-   echo "~/.bootscripts file not found"
-fi
-
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -46,8 +39,9 @@ fi
 plugins=(
 git
 zsh-autosuggestions
+zsh-autocomplete
 zsh-syntax-highlighting
-#zsh-vi-mode
+# zsh-vi-mode
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -59,6 +53,13 @@ export NVM_DIR="$HOME/.local/lib/nvm"
 
 # User configuration
 
+#add go to path
+local go_bin="${HOME}/go/bin"
+if ! echo "${PATH}" | grep -q "${go_bin}" ; then
+  export PATH="${PATH}:${go_bin}"
+fi
+
+
 # Import aliases
 if [[ -f ~/.aliases ]]; then
    source ~/.aliases
@@ -66,11 +67,41 @@ else
    echo "~/.aliases file not found"
 fi
 
+# Run Bootscripts (set path etc)
+if [[ -f ~/.bootscripts ]]; then
+   source ~/.bootscripts
+else
+   echo "~/.bootscripts file not found"
+fi
+
+if [[ -f ~/.envars ]]; then
+   source ~/.envars
+else
+   echo "~/.envars file not found"
+fi
+
+if [[ -f ~/.profile ]]; then
+   source ~/.profile
+else
+   echo "~/.profile file not found"
+fi
+
 export GPG_TTY=$(tty)  # needed for gpg key signing
-export HISTSIZE=100000
-export SAVEHIST=100000
-setopt HIST_IGNORE_DUPS
-setopt SHARE_HISTORY
+export HISTSIZE=100000000
+export SAVEHIST=100000000
+
+setopt append_history
+setopt hist_expire_dups_first
+setopt hist_find_no_dups
+setopt hist_ignore_dups
+setopt hist_ignore_all_dups
+setopt hist_reduce_blanks
+setopt hist_save_no_dups
+setopt hist_ignore_space
+setopt hist_verify
+setopt share_history
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -88,3 +119,6 @@ if [[ -v powerlevel ]]; then
   # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 fi
+
+[[ ! $(command -v nix) && -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]] && source "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+

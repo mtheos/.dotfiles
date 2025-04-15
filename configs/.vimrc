@@ -62,6 +62,7 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 syntax on
-color desert
+set background=dark
+color molokai
 cnoremap sudow w !sudo tee % >/dev/null
 
