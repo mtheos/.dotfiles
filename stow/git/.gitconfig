@@ -8,7 +8,8 @@
 [user]
   name = Michael Theos
   email = michael@theos.me
-  signingkey = 0628CC3897421E40
+[include]
+  path = ~/.gitconfig-local
 [color]
   ui = auto
 [column]
