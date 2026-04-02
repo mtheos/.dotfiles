@@ -23,6 +23,7 @@ dotfiles_zsh_plugins:
 dotfiles_enable_desktop_entries: true
 dotfiles_enable_guake: true
 dotfiles_enable_docker: true
+dotfiles_enable_linuxbrew: true
 dotfiles_enable_iterm2: true
 dotfiles_install_vundle: true
 dotfiles_install_pwndbg: false

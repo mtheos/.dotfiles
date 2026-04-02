@@ -1,2 +1,4 @@
 dotfiles_vundle_repo: https://github.com/VundleVim/Vundle.vim.git
 dotfiles_vundle_dir: "{{ dotfiles_home }}/.vim/bundle/Vundle.vim"
+dotfiles_molokai_url: https://raw.githubusercontent.com/tomasr/molokai/master/colors/molokai.vim
+dotfiles_molokai_dir: "{{ dotfiles_home }}/.vim/colors"

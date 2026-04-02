@@ -13,3 +13,15 @@
     version: master
     update: false
   when: dotfiles_install_vundle | bool
+
+- name: Ensure Vim colors directory exists
+  ansible.builtin.file:
+    path: "{{ dotfiles_molokai_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Install Molokai colorscheme
+  ansible.builtin.get_url:
+    url: "{{ dotfiles_molokai_url }}"
+    dest: "{{ dotfiles_molokai_dir }}/molokai.vim"
+    mode: "0644"

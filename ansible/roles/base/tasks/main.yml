@@ -27,8 +27,45 @@
     update_cache: true
   when: ansible_os_family == "Archlinux"
 
+- name: Check whether Linuxbrew is installed
+  ansible.builtin.stat:
+    path: "{{ dotfiles_linuxbrew_prefix }}/bin/brew"
+  register: dotfiles_linuxbrew_stat
+  when:
+    - ansible_system == "Linux"
+    - dotfiles_enable_linuxbrew | bool
+
+- name: Install Linuxbrew
+  ansible.builtin.shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  args:
+    executable: /bin/bash
+    creates: "{{ dotfiles_linuxbrew_prefix }}/bin/brew"
+  environment:
+    NONINTERACTIVE: "1"
+  when:
+    - ansible_system == "Linux"
+    - dotfiles_enable_linuxbrew | bool
+    - not dotfiles_linuxbrew_stat.stat.exists
+
+- name: Install Linuxbrew packages
+  community.general.homebrew:
+    name: "{{ dotfiles_linuxbrew_packages }}"
+    state: present
+    path: "{{ dotfiles_linuxbrew_prefix }}/bin"
+  environment:
+    PATH: "{{ dotfiles_linuxbrew_prefix }}/bin:{{ ansible_env.PATH }}"
+  when:
+    - ansible_system == "Linux"
+    - dotfiles_enable_linuxbrew | bool
+
 - name: Install macOS base packages
   community.general.homebrew:
     name: "{{ dotfiles_base_packages_macos }}"
+    state: present
+  when: ansible_system == "Darwin"
+
+- name: Install macOS casks
+  community.general.homebrew_cask:
+    name: "{{ dotfiles_base_casks_macos }}"
     state: present
   when: ansible_system == "Darwin"

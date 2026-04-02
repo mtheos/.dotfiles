@@ -20,30 +20,17 @@ docs/      Project planning and reference docs
 
 ## Prerequisites
 
-The new workflow expects:
-
-- `git`
-- `ansible`
-- `stow`
-- `just`
-
-If these are not installed yet, run:
+If `ansible` and `stow` are not installed yet, run:
 
 ```bash
-./scripts/bootstrap-repo.sh
+./scripts/bootstrap.sh
 ```
 
 That script:
 
-- installs `ansible`, `stow`, and `just` when needed
+- installs bootstrap prerequisites such as `ansible` and `stow`
 - installs the required Ansible collection
-- runs the repo bootstrap playbook
-
-If you want the manual version, install the collection and run:
-
-```bash
-ANSIBLE_CONFIG=ansible/ansible.cfg ansible-galaxy collection install -r ansible/collections/requirements.yml
-```
+- applies the full workstation playbook, including packages and Stow-managed dotfiles
 
 ## Podman test container
 
@@ -57,10 +44,10 @@ That script:
 
 - builds [Containerfile.test](/Users/mtheos/work/dotfiles/Containerfile.test)
 - starts a plain Ubuntu container with the repo mounted at `/work/dotfiles`
-- runs `./scripts/bootstrap-repo.sh` inside the container
+- runs `./scripts/bootstrap.sh` inside the container
 
-The container is intentionally minimal. The bootstrap script is responsible for
-installing `ansible`, `stow`, and `just` when needed.
+The container is intentionally minimal. The bootstrap entrypoint is responsible for
+installing prerequisites and applying the repo.
 
 ## Main commands
 
@@ -76,9 +63,9 @@ just backup
 ### What they do
 
 - `just bootstrap`
-  - installs local prerequisites
+  - installs local prerequisites needed to run Ansible
   - installs required Ansible collections
-  - runs the base bootstrap playbook
+  - applies the full workstation playbook
 
 - `just apply`
   - applies the workstation playbook

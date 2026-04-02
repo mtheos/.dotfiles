@@ -4,12 +4,12 @@ default:
   @just --list
 
 bootstrap:
-  ./scripts/bootstrap.sh
+  ./scripts/bootstrap-prereqs.sh
   ANSIBLE_CONFIG=ansible/ansible.cfg ansible-galaxy collection install -r ansible/collections/requirements.yml
-  ANSIBLE_CONFIG=ansible/ansible.cfg ansible-playbook ansible/playbooks/bootstrap.yml --ask-become-pass
+  if [ "$$(uname -s)" = "Darwin" ]; then ANSIBLE_CONFIG=ansible/ansible.cfg ansible-playbook ansible/playbooks/workstation.yml; else ANSIBLE_CONFIG=ansible/ansible.cfg ansible-playbook ansible/playbooks/workstation.yml --ask-become-pass; fi
 
 apply:
-  ANSIBLE_CONFIG=ansible/ansible.cfg ansible-playbook ansible/playbooks/workstation.yml --ask-become-pass
+  if [ "$$(uname -s)" = "Darwin" ]; then ANSIBLE_CONFIG=ansible/ansible.cfg ansible-playbook ansible/playbooks/workstation.yml; else ANSIBLE_CONFIG=ansible/ansible.cfg ansible-playbook ansible/playbooks/workstation.yml --ask-become-pass; fi
 
 backup:
   ANSIBLE_CONFIG=ansible/ansible.cfg ansible-playbook ansible/playbooks/backup.yml

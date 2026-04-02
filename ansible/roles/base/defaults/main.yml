@@ -20,9 +20,29 @@ dotfiles_base_packages_arch:
   - python-pip
   - guake
 
+dotfiles_linuxbrew_prefix: /home/linuxbrew/.linuxbrew
+dotfiles_linuxbrew_packages:
+  - codex
+  - difftastic
+
 dotfiles_base_packages_macos:
+  - curl
+  - difftastic
+  - diff-so-fancy
+  - direnv
+  - gh
   - git
-  - gnu-stow
   - just
+  - lsd
+  - openjdk@17
+  - pyenv
+  - pyenv-virtualenv
+  - rust
+  - stow
+  - tig
   - vim
+  - wget
   - zsh
+
+dotfiles_base_casks_macos:
+  - font-hack-nerd-font

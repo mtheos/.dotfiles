@@ -14,8 +14,10 @@ run_if_present() {
   fi
 }
 
+export ANSIBLE_LOCAL_TEMP="${ANSIBLE_LOCAL_TEMP:-${TMPDIR:-/tmp}}"
+
 bash -n scripts/bootstrap.sh
-bash -n scripts/bootstrap-repo.sh
+bash -n scripts/bootstrap-prereqs.sh
 bash -n scripts/check.sh
 bash -n scripts/doctor.sh
 bash -n scripts/podman-test.sh
@@ -26,9 +28,9 @@ zsh -n stow/zsh/.aliases
 zsh -n stow/zsh/.bootscripts
 zsh -n stow/zsh/.p10k.zsh
 
-ANSIBLE_CONFIG="${repo_root}/ansible/ansible.cfg" ansible-playbook --syntax-check ansible/playbooks/bootstrap.yml
-ANSIBLE_CONFIG="${repo_root}/ansible/ansible.cfg" ansible-playbook --syntax-check ansible/playbooks/workstation.yml
-ANSIBLE_CONFIG="${repo_root}/ansible/ansible.cfg" ansible-playbook --syntax-check ansible/playbooks/backup.yml
+run_if_present env ANSIBLE_CONFIG="${repo_root}/ansible/ansible.cfg" ansible-playbook --syntax-check ansible/playbooks/bootstrap.yml
+run_if_present env ANSIBLE_CONFIG="${repo_root}/ansible/ansible.cfg" ansible-playbook --syntax-check ansible/playbooks/workstation.yml
+run_if_present env ANSIBLE_CONFIG="${repo_root}/ansible/ansible.cfg" ansible-playbook --syntax-check ansible/playbooks/backup.yml
 
 run_if_present ansible-lint ansible
 run_if_present yamllint ansible .yamllint.yml

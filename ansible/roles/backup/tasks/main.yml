@@ -43,6 +43,24 @@
   changed_when: true
   when: ansible_os_family == "Archlinux"
 
+- name: Check whether Linuxbrew is installed for backup export
+  ansible.builtin.stat:
+    path: "{{ dotfiles_linuxbrew_prefix }}/bin/brew"
+  register: dotfiles_backup_linuxbrew_stat
+  when:
+    - ansible_system == "Linux"
+    - dotfiles_enable_linuxbrew | bool
+
+- name: Export Linuxbrew package list
+  ansible.builtin.shell: "{{ dotfiles_linuxbrew_prefix }}/bin/brew bundle dump --file {{ dotfiles_backup_dir }}/Brewfile --force"
+  args:
+    executable: /bin/bash
+  changed_when: true
+  when:
+    - ansible_system == "Linux"
+    - dotfiles_enable_linuxbrew | bool
+    - dotfiles_backup_linuxbrew_stat.stat.exists | default(false)
+
 - name: Export Homebrew package list
   ansible.builtin.shell: "brew bundle dump --file {{ dotfiles_backup_dir }}/Brewfile --force"
   args:

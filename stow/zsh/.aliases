@@ -3,7 +3,22 @@ alias hpl='(cd ~/.dotfiles; git pull)'
 alias hst='(cd ~/.dotfiles; git status)'
 alias hig='(cd ~/.dotfiles; tig)'
 # hps() See below
-alias ea='vim ~/.aliases'
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  if [[ -x "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ]]; then
+    alias subl='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl'
+  fi
+  if [[ -x "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" ]]; then
+    alias code='/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code'
+  fi
+  if command -v lsd >/dev/null 2>&1; then
+    alias ls='lsd'
+    alias ll='lsd -lh'
+    alias l='lsd -lah'
+  fi
+fi
+
+alias ea='${EDITOR:-vim} ~/.aliases'
 alias sa='source ~/.aliases && echo "Aliases sourced  --ok."'
 alias ep='subl ~/.bash_prompt &'
 alias sp='source ~/.bash_prompt && echo "Prompt sourced  --ok."'
@@ -14,9 +29,15 @@ alias runscripts='~/.manualscripts'
 
 alias sudo='sudo '
 # sua() see below
-alias applications='cd /usr/share/applications && ls'
-alias explore='nautilus . &'
-alias exp='nautilus . &'
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  alias applications='open /Applications'
+  alias explore='open .'
+  alias exp='open .'
+else
+  alias applications='cd /usr/share/applications && ls'
+  alias explore='nautilus . &'
+  alias exp='nautilus . &'
+fi
 alias claer='clear; echo You spelt "clear" wrong, dumbass'
 alias sudoexplore='sudo nautilus . &'
 alias sudoexp='sudo nautilus . &'
@@ -29,12 +50,18 @@ alias fucking='sudo '
 alias ssubl='sudo subl'
 alias svim='sudo vim'
 alias lastmem='valgrind --tool=memcheck --leak-check=full LASTCMD'
-alias showme='apt list --upgradable'
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  alias showme='brew outdated'
+else
+  alias showme='apt list --upgradable'
+fi
 alias py2='python'
 alias py3='python3'
 alias py='python3'
 alias pip='py -m pip'
-alias fd='fdfind'
+if command -v fdfind >/dev/null 2>&1; then
+  alias fd='fdfind'
+fi
 alias apps='sudo nautilus /usr/bin'
 alias dapps='sudo nautilus /usr/share/applications'
 alias venv='virtualenv --python=python3 venv'

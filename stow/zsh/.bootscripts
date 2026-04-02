@@ -1,12 +1,45 @@
 #!/usr/bin/env bash
 
 umask 022
+export PATH="${HOME}/.yarn/bin:${PATH}"
 export PATH="${HOME}/.local/bin:${PATH}"
 export PATH="${HOME}/.local/lib/go/bin:${PATH}"
 export PATH="${HOME}/.cargo/bin:${PATH}"
 
 export VISUAL=vim
 export EDITOR="${VISUAL}"
+
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+  setopt HIST_IGNORE_ALL_DUPS
+fi
+
+if /usr/libexec/java_home -v 17 >/dev/null 2>&1; then
+  export JAVA_HOME="$("/usr/libexec/java_home" -v 17)"
+fi
+
+if command -v pyenv >/dev/null 2>&1; then
+  export PYENV_ROOT="${PYENV_ROOT:-${HOME}/.pyenv}"
+  if [[ -n "${ZSH_VERSION:-}" ]]; then
+    eval "$(pyenv init - zsh)"
+    eval "$(pyenv virtualenv-init -)"
+  elif [[ -n "${BASH_VERSION:-}" ]]; then
+    eval "$(pyenv init - bash)"
+  fi
+fi
+
+if command -v direnv >/dev/null 2>&1; then
+  if [[ -n "${ZSH_VERSION:-}" ]]; then
+    eval "$(direnv hook zsh)"
+  elif [[ -n "${BASH_VERSION:-}" ]]; then
+    eval "$(direnv hook bash)"
+  fi
+fi
+
+if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [[ "$(uname -s)" == "Linux" ]] && command -v brew >/dev/null 2>&1; then
+  eval "$(brew shellenv)"
+fi
 
 SSH_ENV="${HOME}/.ssh/agent-environment"
 
