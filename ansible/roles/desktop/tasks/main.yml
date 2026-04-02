@@ -1,0 +1,53 @@
+---
+- name: Install desktop assets
+  when:
+    - ansible_system == "Linux"
+    - dotfiles_enable_desktop_entries | bool
+  block:
+    - name: Ensure desktop installation directories exist
+      become: true
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "{{ dotfiles_desktop_bin_dir }}"
+        - "{{ dotfiles_desktop_applications_dir }}"
+
+    - name: Install desktop wrapper scripts
+      become: true
+      ansible.builtin.copy:
+        src: "{{ dotfiles_files_dir }}/desktop_entries/bin/{{ item }}"
+        dest: "{{ dotfiles_desktop_bin_dir }}/{{ item }}"
+        mode: "0755"
+      loop: "{{ dotfiles_desktop_wrappers }}"
+
+    - name: Install templated JetBrains desktop entries
+      become: true
+      ansible.builtin.template:
+        src: "{{ item }}.j2"
+        dest: "{{ dotfiles_desktop_applications_dir }}/{{ item }}"
+        mode: "0644"
+      loop:
+        - clion.desktop
+        - intellij.desktop
+        - pycharm.desktop
+        - rider.desktop
+        - webstorm.desktop
+
+    - name: Install static desktop entries
+      become: true
+      ansible.builtin.copy:
+        src: "{{ dotfiles_files_dir }}/desktop_entries/desktop/{{ item }}"
+        dest: "{{ dotfiles_desktop_applications_dir }}/{{ item }}"
+        mode: "0644"
+      loop: "{{ dotfiles_static_desktop_entries }}"
+
+    - name: Import Guake preferences
+      ansible.builtin.shell: "dconf load /apps/guake/ < {{ dotfiles_files_dir }}/guake/guake.dconf"
+      args:
+        executable: /bin/bash
+      changed_when: false
+      when:
+        - dotfiles_enable_guake | bool
+        - ansible_env.DISPLAY is defined

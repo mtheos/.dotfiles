@@ -1,0 +1,8 @@
+---
+- name: Export dotfiles backup metadata
+  hosts: localhost
+  gather_facts: true
+  vars_files:
+    - ../group_vars/all.yml
+  roles:
+    - role: backup

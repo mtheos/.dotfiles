@@ -1,0 +1,23 @@
+---
+- name: Prepare existing targets for Stow migration
+  ansible.builtin.command:
+    cmd: "{{ dotfiles_scripts_dir }}/prepare-stow-targets.sh"
+  changed_when: false
+
+- name: Preview stow package changes
+  ansible.builtin.command:
+    cmd: >-
+      stow --dir {{ dotfiles_stow_dir }} --target {{ dotfiles_stow_target }}
+      --simulate {{ item }}
+  loop: "{{ dotfiles_stow_packages }}"
+  register: dotfiles_stow_preview
+  changed_when: false
+
+- name: Apply stow packages with changes
+  ansible.builtin.command:
+    cmd: >-
+      stow --dir {{ dotfiles_stow_dir }} --target {{ dotfiles_stow_target }}
+      --restow {{ item.item }}
+  loop: "{{ dotfiles_stow_preview.results }}"
+  when: item.stdout | trim != "" or item.stderr | trim != ""
+  changed_when: true

@@ -1,0 +1,2 @@
+dotfiles_iterm2_prefs_dir: "{{ dotfiles_static_repo_path }}/files/iterm2"
+dotfiles_iterm2_domain: com.googlecode.iterm2

@@ -1,0 +1,29 @@
+dotfiles_home: "{{ ansible_env.HOME }}"
+dotfiles_repo_root: "{{ playbook_dir | dirname | dirname }}"
+dotfiles_stow_dir: "{{ dotfiles_repo_root }}/stow"
+dotfiles_files_dir: "{{ dotfiles_repo_root }}/files"
+dotfiles_scripts_dir: "{{ dotfiles_repo_root }}/scripts"
+dotfiles_backup_dir: "{{ dotfiles_home }}/.local/state/dotfiles-backup"
+dotfiles_static_repo_path: "{{ dotfiles_home }}/.dotfiles"
+
+dotfiles_stow_packages:
+  - git
+  - gdb
+  - vim
+  - zsh
+
+dotfiles_zsh_plugins:
+  - name: zsh-autocomplete
+    repo: https://github.com/marlonrichert/zsh-autocomplete.git
+  - name: zsh-autosuggestions
+    repo: https://github.com/zsh-users/zsh-autosuggestions.git
+  - name: zsh-syntax-highlighting
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+
+dotfiles_enable_desktop_entries: true
+dotfiles_enable_guake: true
+dotfiles_enable_docker: true
+dotfiles_enable_iterm2: true
+dotfiles_install_vundle: true
+dotfiles_install_pwndbg: false
+dotfiles_set_default_shell: false

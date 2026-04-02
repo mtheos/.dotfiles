@@ -1,0 +1,34 @@
+---
+- name: Ensure local state directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ dotfiles_home }}/.config"
+    - "{{ dotfiles_home }}/.local"
+    - "{{ dotfiles_home }}/.local/bin"
+    - "{{ dotfiles_home }}/.local/state"
+    - "{{ dotfiles_backup_dir }}"
+
+- name: Install Debian base packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ dotfiles_base_packages_common + dotfiles_base_packages_debian }}"
+    state: present
+    update_cache: true
+  when: ansible_os_family == "Debian"
+
+- name: Install Arch base packages
+  become: true
+  community.general.pacman:
+    name: "{{ dotfiles_base_packages_common + dotfiles_base_packages_arch }}"
+    state: present
+    update_cache: true
+  when: ansible_os_family == "Archlinux"
+
+- name: Install macOS base packages
+  community.general.homebrew:
+    name: "{{ dotfiles_base_packages_macos }}"
+    state: present
+  when: ansible_system == "Darwin"

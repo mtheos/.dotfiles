@@ -1,0 +1,2 @@
+dotfiles_vundle_repo: https://github.com/VundleVim/Vundle.vim.git
+dotfiles_vundle_dir: "{{ dotfiles_home }}/.vim/bundle/Vundle.vim"

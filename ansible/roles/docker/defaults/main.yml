@@ -1,0 +1,12 @@
+dotfiles_docker_prerequisites:
+  - ca-certificates
+  - curl
+dotfiles_docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+dotfiles_docker_arch_map:
+  x86_64: amd64
+  aarch64: arm64

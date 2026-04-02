@@ -1,0 +1,28 @@
+dotfiles_base_packages_common:
+  - git
+  - curl
+  - wget
+  - zsh
+  - vim
+  - stow
+  - just
+
+dotfiles_base_packages_debian:
+  - ca-certificates
+  - dconf-cli
+  - gnupg
+  - python3-pip
+  - guake
+
+dotfiles_base_packages_arch:
+  - base-devel
+  - dconf
+  - python-pip
+  - guake
+
+dotfiles_base_packages_macos:
+  - git
+  - gnu-stow
+  - just
+  - vim
+  - zsh

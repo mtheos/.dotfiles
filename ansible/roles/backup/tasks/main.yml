@@ -1,0 +1,51 @@
+---
+- name: Ensure backup export directory exists
+  ansible.builtin.file:
+    path: "{{ dotfiles_backup_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Export dotfiles manifest
+  ansible.builtin.copy:
+    dest: "{{ dotfiles_backup_dir }}/manifest.yml"
+    mode: "0644"
+    content: |
+      generated_at: {{ ansible_date_time.iso8601 }}
+      host: {{ inventory_hostname }}
+      system: {{ ansible_system }}
+      distribution: {{ ansible_distribution | default('unknown') }}
+      distribution_release: {{ ansible_distribution_release | default('unknown') }}
+      stow_packages:
+      {% for package in dotfiles_stow_packages %}
+        - {{ package }}
+      {% endfor %}
+
+- name: Export stow package list
+  ansible.builtin.copy:
+    dest: "{{ dotfiles_backup_dir }}/stow-packages.txt"
+    mode: "0644"
+    content: |
+      {% for package in dotfiles_stow_packages %}
+      {{ package }}
+      {% endfor %}
+
+- name: Export Debian package list
+  ansible.builtin.shell: "apt-mark showmanual > {{ dotfiles_backup_dir }}/apt-manual.txt"
+  args:
+    executable: /bin/bash
+  changed_when: true
+  when: ansible_os_family == "Debian"
+
+- name: Export Arch package list
+  ansible.builtin.shell: "pacman -Qqe > {{ dotfiles_backup_dir }}/pacman-explicit.txt"
+  args:
+    executable: /bin/bash
+  changed_when: true
+  when: ansible_os_family == "Archlinux"
+
+- name: Export Homebrew package list
+  ansible.builtin.shell: "brew bundle dump --file {{ dotfiles_backup_dir }}/Brewfile --force"
+  args:
+    executable: /bin/bash
+  changed_when: true
+  when: ansible_system == "Darwin"

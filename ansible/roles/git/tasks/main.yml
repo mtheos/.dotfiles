@@ -1,0 +1,8 @@
+---
+- name: Ensure global gitignore exists
+  ansible.builtin.copy:
+    dest: "{{ dotfiles_home }}/.gitignore"
+    content: |
+      # Local machine-specific ignores live here.
+    mode: "0644"
+    force: false

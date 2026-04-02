@@ -1,0 +1,15 @@
+---
+- name: Ensure Vim bundle directory exists
+  ansible.builtin.file:
+    path: "{{ dotfiles_home }}/.vim/bundle"
+    state: directory
+    mode: "0755"
+  when: dotfiles_install_vundle | bool
+
+- name: Install Vundle
+  ansible.builtin.git:
+    repo: "{{ dotfiles_vundle_repo }}"
+    dest: "{{ dotfiles_vundle_dir }}"
+    version: master
+    update: false
+  when: dotfiles_install_vundle | bool

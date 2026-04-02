@@ -1,0 +1,8 @@
+---
+- name: Bootstrap dotfiles prerequisites
+  hosts: localhost
+  gather_facts: true
+  vars_files:
+    - ../group_vars/all.yml
+  roles:
+    - role: base

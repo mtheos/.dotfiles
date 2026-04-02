@@ -1,0 +1,30 @@
+---
+- name: Configure iTerm2 custom preferences on macOS
+  when:
+    - ansible_system == "Darwin"
+    - dotfiles_enable_iterm2 | bool
+  block:
+    - name: Ensure static dotfiles iTerm2 path exists
+      ansible.builtin.file:
+        path: "{{ dotfiles_iterm2_prefs_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Point iTerm2 at the managed preferences folder
+      community.general.osx_defaults:
+        domain: "{{ dotfiles_iterm2_domain }}"
+        key: "{{ item.key }}"
+        type: "{{ item.type }}"
+        value: "{{ item.value }}"
+      loop:
+        - key: PrefsCustomFolder
+          type: string
+          value: "{{ dotfiles_iterm2_prefs_dir }}"
+        - key: LoadPrefsFromCustomFolder
+          type: bool
+          value: true
+
+    - name: Flush macOS preferences cache
+      ansible.builtin.command: killall cfprefsd
+      changed_when: false
+      failed_when: false

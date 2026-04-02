@@ -1,0 +1,15 @@
+dotfiles_desktop_bin_dir: /usr/local/bin
+dotfiles_desktop_applications_dir: /usr/local/share/applications
+dotfiles_desktop_wrappers:
+  - clion
+  - code
+  - intellij
+  - pycharm
+  - rider
+  - subl
+  - webstorm
+dotfiles_static_desktop_entries:
+  - code.desktop
+  - python2.7.desktop
+  - python3.6.desktop
+  - sublime_text.desktop

@@ -1,0 +1,8 @@
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Australia/Sydney
+
+WORKDIR /work/dotfiles
+
+CMD ["/bin/bash"]

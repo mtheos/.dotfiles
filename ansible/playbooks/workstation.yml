@@ -1,0 +1,15 @@
+---
+- name: Apply workstation dotfiles configuration
+  hosts: localhost
+  gather_facts: true
+  vars_files:
+    - ../group_vars/all.yml
+  roles:
+    - role: base
+    - role: git
+    - role: shell
+    - role: editors
+    - role: stow
+    - role: desktop
+    - role: iterm2
+    - role: docker

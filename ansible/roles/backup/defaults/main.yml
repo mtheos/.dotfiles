@@ -1,0 +1,3 @@
+dotfiles_backup_exports:
+  - manifest.yml
+  - stow-packages.txt

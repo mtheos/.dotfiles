@@ -1,0 +1,46 @@
+---
+- name: Ensure oh-my-zsh directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ dotfiles_oh_my_zsh_dir }}"
+    - "{{ dotfiles_oh_my_zsh_custom }}"
+    - "{{ dotfiles_oh_my_zsh_custom }}/plugins"
+    - "{{ dotfiles_oh_my_zsh_custom }}/themes"
+
+- name: Install oh-my-zsh
+  ansible.builtin.git:
+    repo: "{{ dotfiles_oh_my_zsh_repo }}"
+    dest: "{{ dotfiles_oh_my_zsh_dir }}"
+    version: master
+    update: false
+
+- name: Install zsh plugins
+  ansible.builtin.git:
+    repo: "{{ item.repo }}"
+    dest: "{{ dotfiles_oh_my_zsh_custom }}/plugins/{{ item.name }}"
+    version: master
+    update: false
+  loop: "{{ dotfiles_zsh_plugins }}"
+
+- name: Install powerlevel10k
+  ansible.builtin.git:
+    repo: "{{ dotfiles_powerlevel10k_repo }}"
+    dest: "{{ dotfiles_powerlevel10k_dir }}"
+    version: master
+    update: false
+
+- name: Install custom muse theme
+  ansible.builtin.copy:
+    src: "{{ dotfiles_files_dir }}/zsh/themes/muse_mod.zsh-theme"
+    dest: "{{ dotfiles_oh_my_zsh_custom }}/themes/muse_mod.zsh-theme"
+    mode: "0644"
+
+- name: Set login shell to zsh
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    shell: "{{ ansible_facts.user_shell | regex_replace('([^/]+)$', 'zsh') }}"
+  when: dotfiles_set_default_shell | bool
