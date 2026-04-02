@@ -58,6 +58,67 @@
     - ansible_system == "Linux"
     - dotfiles_enable_linuxbrew | bool
 
+- name: Ensure Nerd Fonts directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ dotfiles_nerd_fonts_cache_dir }}"
+    - "{{ dotfiles_nerd_fonts_install_dir }}"
+  when:
+    - ansible_system == "Linux"
+    - dotfiles_enable_nerd_fonts | bool
+
+- name: Download Nerd Fonts archives
+  ansible.builtin.get_url:
+    url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v{{ dotfiles_nerd_fonts_version }}/{{ item.archive }}"
+    dest: "{{ dotfiles_nerd_fonts_cache_dir }}/{{ item.archive }}"
+    mode: "0644"
+  loop: "{{ dotfiles_nerd_fonts }}"
+  when:
+    - ansible_system == "Linux"
+    - dotfiles_enable_nerd_fonts | bool
+
+- name: Ensure per-font install directories exist
+  ansible.builtin.file:
+    path: "{{ dotfiles_nerd_fonts_install_dir }}/{{ item.name }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ dotfiles_nerd_fonts }}"
+  when:
+    - ansible_system == "Linux"
+    - dotfiles_enable_nerd_fonts | bool
+
+- name: Extract Nerd Fonts archives
+  ansible.builtin.unarchive:
+    src: "{{ dotfiles_nerd_fonts_cache_dir }}/{{ item.archive }}"
+    dest: "{{ dotfiles_nerd_fonts_install_dir }}/{{ item.name }}"
+    remote_src: true
+    creates: "{{ dotfiles_nerd_fonts_install_dir }}/{{ item.name }}/.version-{{ dotfiles_nerd_fonts_version }}"
+  loop: "{{ dotfiles_nerd_fonts }}"
+  when:
+    - ansible_system == "Linux"
+    - dotfiles_enable_nerd_fonts | bool
+
+- name: Mark installed Nerd Fonts version
+  ansible.builtin.copy:
+    dest: "{{ dotfiles_nerd_fonts_install_dir }}/{{ item.name }}/.version-{{ dotfiles_nerd_fonts_version }}"
+    content: "{{ dotfiles_nerd_fonts_version }}\n"
+    mode: "0644"
+  loop: "{{ dotfiles_nerd_fonts }}"
+  when:
+    - ansible_system == "Linux"
+    - dotfiles_enable_nerd_fonts | bool
+
+- name: Refresh font cache
+  ansible.builtin.command: fc-cache -f "{{ dotfiles_nerd_fonts_install_dir }}"
+  changed_when: false
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+    - dotfiles_enable_nerd_fonts | bool
+
 - name: Install macOS base packages
   community.general.homebrew:
     name: "{{ dotfiles_base_packages_macos }}"

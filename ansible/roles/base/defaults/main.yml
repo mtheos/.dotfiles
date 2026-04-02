@@ -25,6 +25,16 @@ dotfiles_linuxbrew_packages:
   - codex
   - difftastic
 
+dotfiles_enable_nerd_fonts: true
+dotfiles_nerd_fonts_cache_dir: "{{ dotfiles_home }}/.local/state/dotfiles/nerd-fonts"
+dotfiles_nerd_fonts_install_dir: "{{ dotfiles_home }}/.local/share/fonts"
+dotfiles_nerd_fonts_version: 3.4.0
+dotfiles_nerd_fonts:
+  - name: Hack
+    archive: Hack.zip
+  - name: Meslo
+    archive: Meslo.zip
+
 dotfiles_base_packages_macos:
   - curl
   - difftastic

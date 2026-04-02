@@ -22,18 +22,12 @@
         mode: "0755"
       loop: "{{ dotfiles_desktop_wrappers }}"
 
-    - name: Install templated JetBrains desktop entries
+    - name: Remove obsolete JetBrains wrapper scripts
       become: true
-      ansible.builtin.template:
-        src: "{{ item }}.j2"
-        dest: "{{ dotfiles_desktop_applications_dir }}/{{ item }}"
-        mode: "0644"
-      loop:
-        - clion.desktop
-        - intellij.desktop
-        - pycharm.desktop
-        - rider.desktop
-        - webstorm.desktop
+      ansible.builtin.file:
+        path: "{{ dotfiles_desktop_bin_dir }}/{{ item }}"
+        state: absent
+      loop: "{{ dotfiles_removed_desktop_wrappers }}"
 
     - name: Install static desktop entries
       become: true
@@ -42,6 +36,13 @@
         dest: "{{ dotfiles_desktop_applications_dir }}/{{ item }}"
         mode: "0644"
       loop: "{{ dotfiles_static_desktop_entries }}"
+
+    - name: Remove obsolete JetBrains desktop entries
+      become: true
+      ansible.builtin.file:
+        path: "{{ dotfiles_desktop_applications_dir }}/{{ item }}"
+        state: absent
+      loop: "{{ dotfiles_removed_desktop_entries }}"
 
     - name: Import Guake preferences
       ansible.builtin.shell: "dconf load /apps/guake/ < {{ dotfiles_files_dir }}/guake/guake.dconf"

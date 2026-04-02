@@ -1,2 +1,0 @@
-#!/bin/bash
-exec ~/opt/webstorm/bin/webstorm.sh %f
