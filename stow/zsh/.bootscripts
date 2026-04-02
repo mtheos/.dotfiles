@@ -41,21 +41,23 @@ elif [[ "$(uname -s)" == "Linux" ]] && command -v brew >/dev/null 2>&1; then
   eval "$(brew shellenv)"
 fi
 
-SSH_ENV="${HOME}/.ssh/agent-environment"
+if [[ "$(uname -s)" != "Darwin" ]]; then
+  SSH_ENV="${HOME}/.ssh/agent-environment"
 
-start_agent() {
-  echo "Initialising new SSH agent..."
-  /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-  chmod 600 "${SSH_ENV}"
-  . "${SSH_ENV}" >/dev/null
-  /usr/bin/ssh-add
-}
+  start_agent() {
+    echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" >/dev/null
+    /usr/bin/ssh-add
+  }
 
-if [[ -f "${SSH_ENV}" ]]; then
-  . "${SSH_ENV}" >/dev/null
-  if ! ps -p "${SSH_AGENT_PID:-0}" >/dev/null 2>&1; then
+  if [[ -f "${SSH_ENV}" ]]; then
+    . "${SSH_ENV}" >/dev/null
+    if ! ps -p "${SSH_AGENT_PID:-0}" >/dev/null 2>&1; then
+      start_agent
+    fi
+  else
     start_agent
   fi
-else
-  start_agent
 fi
