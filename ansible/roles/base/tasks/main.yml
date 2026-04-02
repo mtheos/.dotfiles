@@ -27,6 +27,26 @@
     update_cache: true
   when: ansible_os_family == "Archlinux"
 
+- name: Install Debian Linuxbrew prerequisites
+  become: true
+  ansible.builtin.apt:
+    name: "{{ dotfiles_linuxbrew_prereq_packages_debian }}"
+    state: present
+  when:
+    - ansible_system == "Linux"
+    - ansible_os_family == "Debian"
+    - dotfiles_enable_linuxbrew | bool
+
+- name: Install Arch Linuxbrew prerequisites
+  become: true
+  community.general.pacman:
+    name: "{{ dotfiles_linuxbrew_prereq_packages_arch }}"
+    state: present
+  when:
+    - ansible_system == "Linux"
+    - ansible_os_family == "Archlinux"
+    - dotfiles_enable_linuxbrew | bool
+
 - name: Check whether Linuxbrew is installed
   ansible.builtin.stat:
     path: "{{ dotfiles_linuxbrew_prefix }}/bin/brew"

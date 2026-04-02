@@ -64,5 +64,10 @@ if ! command -v nix >/dev/null 2>&1 && [[ -e "/nix/var/nix/profiles/default/etc/
   source "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
 fi
 
-. "/home/michael/.deno/env"
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+if [[ -f "${HOME}/.deno/env" ]]; then
+  source "${HOME}/.deno/env"
+fi
+
+if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+fi

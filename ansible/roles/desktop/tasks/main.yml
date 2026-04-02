@@ -21,8 +21,9 @@
         dest: "{{ dotfiles_desktop_bin_dir }}/{{ item }}"
         mode: "0755"
       loop: "{{ dotfiles_desktop_wrappers }}"
+      when: dotfiles_desktop_wrappers | length > 0
 
-    - name: Remove obsolete JetBrains wrapper scripts
+    - name: Remove obsolete desktop wrapper scripts
       become: true
       ansible.builtin.file:
         path: "{{ dotfiles_desktop_bin_dir }}/{{ item }}"
@@ -36,8 +37,9 @@
         dest: "{{ dotfiles_desktop_applications_dir }}/{{ item }}"
         mode: "0644"
       loop: "{{ dotfiles_static_desktop_entries }}"
+      when: dotfiles_static_desktop_entries | length > 0
 
-    - name: Remove obsolete JetBrains desktop entries
+    - name: Remove obsolete desktop entries
       become: true
       ansible.builtin.file:
         path: "{{ dotfiles_desktop_applications_dir }}/{{ item }}"

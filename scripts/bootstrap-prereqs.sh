@@ -51,12 +51,24 @@ ensure_brew_shellenv() {
     eval "$(/opt/homebrew/bin/brew shellenv)"
   elif [ -x /usr/local/bin/brew ]; then
     eval "$(/usr/local/bin/brew shellenv)"
+  elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
   fi
 }
 
 install_with_brew() {
   ensure_brew_shellenv
   brew install ansible stow
+}
+
+install_linuxbrew_prereqs_with_apt() {
+  configure_debian_timezone
+  run_apt_noninteractive apt update
+  run_apt_noninteractive apt install -y build-essential procps curl file git
+}
+
+install_linuxbrew_prereqs_with_pacman() {
+  run_privileged pacman -Syu --noconfirm base-devel procps-ng curl file git
 }
 
 install_with_apt() {
@@ -76,6 +88,17 @@ main() {
   fi
 
   if [ "$(uname -s)" = "Darwin" ] && ! command_exists brew; then
+    install_homebrew
+    ensure_brew_shellenv
+  fi
+
+  if [ "$(uname -s)" = "Linux" ] && ! command_exists brew && [ "$(id -u)" -ne 0 ]; then
+    if command_exists apt; then
+      install_linuxbrew_prereqs_with_apt
+    elif command_exists pacman; then
+      install_linuxbrew_prereqs_with_pacman
+    fi
+
     install_homebrew
     ensure_brew_shellenv
   fi

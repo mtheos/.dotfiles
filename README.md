@@ -113,7 +113,6 @@ Migrated into Ansible-managed assets:
 - `powerlevel10k`
 - custom `muse_mod` theme
 - iTerm2 custom preferences via `~/.dotfiles/files/iterm2`
-- Linux desktop wrapper scripts and desktop entries
 - Guake preferences
 - Docker setup for Debian/Ubuntu
 

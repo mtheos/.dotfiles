@@ -21,9 +21,17 @@ dotfiles_base_packages_arch:
   - guake
 
 dotfiles_linuxbrew_prefix: /home/linuxbrew/.linuxbrew
+dotfiles_linuxbrew_prereq_packages_debian:
+  - build-essential
+  - file
+  - procps
+dotfiles_linuxbrew_prereq_packages_arch:
+  - file
+  - procps-ng
 dotfiles_linuxbrew_packages:
   - codex
   - difftastic
+  - diff-so-fancy
 
 dotfiles_enable_nerd_fonts: true
 dotfiles_nerd_fonts_cache_dir: "{{ dotfiles_home }}/.local/state/dotfiles/nerd-fonts"
