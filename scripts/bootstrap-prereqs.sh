@@ -17,9 +17,9 @@ run_privileged() {
 
 run_apt_noninteractive() {
   if [ "$(id -u)" -eq 0 ]; then
-    DEBIAN_FRONTEND=noninteractive TZ="${BOOTSTRAP_TZ}" "$@"
+    env DEBIAN_FRONTEND=noninteractive TZ="${BOOTSTRAP_TZ}" "$@"
   else
-    sudo DEBIAN_FRONTEND=noninteractive TZ="${BOOTSTRAP_TZ}" "$@"
+    sudo env DEBIAN_FRONTEND=noninteractive TZ="${BOOTSTRAP_TZ}" "$@"
   fi
 }
 
