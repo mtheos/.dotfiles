@@ -15,6 +15,20 @@ run_if_present() {
 }
 
 export ANSIBLE_LOCAL_TEMP="${ANSIBLE_LOCAL_TEMP:-${TMPDIR:-/tmp}}"
+export ANSIBLE_CONFIG="${repo_root}/ansible/ansible.cfg"
+repo_collection_paths="${repo_root}/ansible/collections:${repo_root}/.ansible/collections"
+export ANSIBLE_COLLECTIONS_PATH="${repo_collection_paths}${ANSIBLE_COLLECTIONS_PATH:+:${ANSIBLE_COLLECTIONS_PATH}}"
+
+if command -v ansible-galaxy >/dev/null 2>&1; then
+  collection_root="$(
+    ansible-galaxy collection list community.general --format json 2>/dev/null |
+      sed -n 's/^{"\([^"]*\/ansible_collections\)".*/\1/p'
+  )" || collection_root=""
+  if [ -n "${collection_root}" ]; then
+    collection_parent="${collection_root%/ansible_collections}"
+    export ANSIBLE_COLLECTIONS_PATH="${collection_parent}:${ANSIBLE_COLLECTIONS_PATH}"
+  fi
+fi
 
 bash -n scripts/bootstrap.sh
 bash -n scripts/bootstrap-prereqs.sh
@@ -28,9 +42,9 @@ zsh -n stow/zsh/.aliases
 zsh -n stow/zsh/.bootscripts
 zsh -n stow/zsh/.p10k.zsh
 
-run_if_present env ANSIBLE_CONFIG="${repo_root}/ansible/ansible.cfg" ansible-playbook --syntax-check ansible/playbooks/bootstrap.yml
-run_if_present env ANSIBLE_CONFIG="${repo_root}/ansible/ansible.cfg" ansible-playbook --syntax-check ansible/playbooks/workstation.yml
-run_if_present env ANSIBLE_CONFIG="${repo_root}/ansible/ansible.cfg" ansible-playbook --syntax-check ansible/playbooks/backup.yml
+run_if_present ansible-playbook --syntax-check ansible/playbooks/bootstrap.yml
+run_if_present ansible-playbook --syntax-check ansible/playbooks/workstation.yml
+run_if_present ansible-playbook --syntax-check ansible/playbooks/backup.yml
 
 run_if_present ansible-lint ansible
 run_if_present yamllint ansible .yamllint.yml
