@@ -92,7 +92,9 @@
 
 - name: Download Nerd Fonts archives
   ansible.builtin.get_url:
-    url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v{{ dotfiles_nerd_fonts_version }}/{{ item.archive }}"
+    url: >-
+      https://github.com/ryanoasis/nerd-fonts/releases/download/v{{
+      dotfiles_nerd_fonts_version }}/{{ item.archive }}
     dest: "{{ dotfiles_nerd_fonts_cache_dir }}/{{ item.archive }}"
     mode: "0644"
   loop: "{{ dotfiles_nerd_fonts }}"

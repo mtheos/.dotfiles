@@ -52,7 +52,10 @@
     - dotfiles_enable_linuxbrew | bool
 
 - name: Export Linuxbrew package list
-  ansible.builtin.shell: "{{ dotfiles_linuxbrew_prefix }}/bin/brew bundle dump --file {{ dotfiles_backup_dir }}/Brewfile --force"
+  ansible.builtin.shell: >-
+    {{ dotfiles_linuxbrew_prefix }}/bin/brew bundle dump
+    --file {{ dotfiles_backup_dir }}/Brewfile
+    --force
   args:
     executable: /bin/bash
   changed_when: true
