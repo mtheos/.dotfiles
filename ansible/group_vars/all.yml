@@ -15,10 +15,13 @@ dotfiles_stow_packages:
 dotfiles_zsh_plugins:
   - name: zsh-autocomplete
     repo: https://github.com/marlonrichert/zsh-autocomplete.git
+    version: main
   - name: zsh-autosuggestions
     repo: https://github.com/zsh-users/zsh-autosuggestions.git
+    version: master
   - name: zsh-syntax-highlighting
     repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    version: master
 
 dotfiles_enable_desktop_entries: true
 dotfiles_enable_guake: true
