@@ -9,7 +9,7 @@
       become: true
       ansible.builtin.apt:
         name: "{{ dotfiles_docker_prerequisites }}"
-        state: present
+        state: latest
         update_cache: true
 
     - name: Ensure Docker keyring directory exists
@@ -41,5 +41,5 @@
       become: true
       ansible.builtin.apt:
         name: "{{ dotfiles_docker_packages }}"
-        state: present
+        state: latest
         update_cache: true

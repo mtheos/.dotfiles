@@ -15,7 +15,7 @@
   become: true
   ansible.builtin.apt:
     name: "{{ dotfiles_base_packages_common + dotfiles_base_packages_debian }}"
-    state: present
+    state: latest
     update_cache: true
   when: ansible_os_family == "Debian"
 
@@ -23,7 +23,7 @@
   become: true
   community.general.pacman:
     name: "{{ dotfiles_base_packages_common + dotfiles_base_packages_arch }}"
-    state: present
+    state: latest
     update_cache: true
   when: ansible_os_family == "Archlinux"
 
@@ -31,7 +31,8 @@
   become: true
   ansible.builtin.apt:
     name: "{{ dotfiles_linuxbrew_prereq_packages_debian }}"
-    state: present
+    state: latest
+    update_cache: true
   when:
     - ansible_system == "Linux"
     - ansible_os_family == "Debian"
@@ -41,7 +42,8 @@
   become: true
   community.general.pacman:
     name: "{{ dotfiles_linuxbrew_prereq_packages_arch }}"
-    state: present
+    state: latest
+    update_cache: true
   when:
     - ansible_system == "Linux"
     - ansible_os_family == "Archlinux"
@@ -70,7 +72,8 @@
 - name: Install Linuxbrew packages
   community.general.homebrew:
     name: "{{ dotfiles_linuxbrew_packages }}"
-    state: present
+    state: latest
+    update_homebrew: true
     path: "{{ dotfiles_linuxbrew_prefix }}/bin"
   environment:
     PATH: "{{ dotfiles_linuxbrew_prefix }}/bin:{{ ansible_env.PATH }}"
@@ -144,11 +147,12 @@
 - name: Install macOS base packages
   community.general.homebrew:
     name: "{{ dotfiles_base_packages_macos }}"
-    state: present
+    state: latest
+    update_homebrew: true
   when: ansible_system == "Darwin"
 
 - name: Install macOS casks
   community.general.homebrew_cask:
     name: "{{ dotfiles_base_casks_macos }}"
-    state: present
+    state: upgraded
   when: ansible_system == "Darwin"
