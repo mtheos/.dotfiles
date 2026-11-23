@@ -59,7 +59,7 @@
 			<key>Text</key>
 			<string></string>
 		</dict>
-		<key>0x4c-0x120000-0x25</key>
+		<key>0x4c-0x120000-0x25-0x1</key>
 		<dict>
 			<key>Action</key>
 			<integer>60</integer>
@@ -68,7 +68,7 @@
 			<key>Text</key>
 			<string>launch_canva_vert()</string>
 		</dict>
-		<key>0x6c-0x140000-0x25</key>
+		<key>0x6c-0x140000-0x25-0x1</key>
 		<dict>
 			<key>Action</key>
 			<integer>60</integer>
@@ -84,7 +84,7 @@
 			<key>Text</key>
 			<string></string>
 		</dict>
-		<key>0xd-0x20000-0x24</key>
+		<key>0xd-0x20000-0x24-0x1</key>
 		<dict>
 			<key>Action</key>
 			<integer>12</integer>
@@ -937,7 +937,7 @@
 					<key>Text</key>
 					<string>97026F84-D155-445B-B6A0-AE86A56C10DC</string>
 				</dict>
-				<key>0xf702-0x280000-0x7b</key>
+				<key>0xf702-0x280000-0x7b-0x1</key>
 				<dict>
 					<key>Action</key>
 					<integer>10</integer>
@@ -946,7 +946,7 @@
 					<key>Text</key>
 					<string>b</string>
 				</dict>
-				<key>0xf703-0x280000-0x7c</key>
+				<key>0xf703-0x280000-0x7c-0x1</key>
 				<dict>
 					<key>Action</key>
 					<integer>10</integer>
